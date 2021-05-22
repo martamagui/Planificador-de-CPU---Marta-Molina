@@ -28,7 +28,13 @@ function vaciarTarjeta(param) {
     }else{}
     tarjeta.innerHTML="";
 }
-//CREAR PROCESOS
+
+
+
+
+
+//********POO********//
+//CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 function crearProceso(llegada,duracion,prioridad,presente,enEjecucion){
   //ints
   this.llegda=llegada;

@@ -49,11 +49,12 @@ body {
   margin: 2vh;
   text-align: center;
 }
-#botones {
+#sub_tarjeta {
+  align-self: center;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 1vh;
+  margin-top: 5vh;
   margin-bottom: 2vh;
 }
 .pack {
