@@ -34,6 +34,10 @@ function vaciarTarjeta(param) {
 
 
 //********POO********//
+let qtum;
+function establecerQtum(pram){
+  qtum=param;
+}
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 function crearProceso(llegada,duracion,prioridad,presente,enEjecucion){
   //ints
