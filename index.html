@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Style/style.css">
     <meta name="author" content="Marta Molina Aguilera">
     <title>Planificador de CPU - MMA</title>
 </head>
-<body onload="cargarIncial()">
+
+<body>
     <!--Header/nav-->
     <header id="header_nav">
         <h3>Marta Molina Aguilera 1º de DAM 2020-2021 U-TAD</h3>
@@ -16,10 +18,22 @@
     <!--Section-->
     <section id="section">
         <article class="section_tarjeta" id="tarjeta">
+            <h3 class="st_titulo">Lo primero que deberás hacer es seleccionar qué algoritmo te gustaría que organice la ejeccución de tus
+                procesos:</h3>
+            <div id="subTarjeta" class="sub_tarjeta">
+                <div id="packFifo" class="pack"><button onclick="mostrarForm('FIFO')">FIFO</button><span>El primer
+                        proceso en llegar, será el primero en ser atendido</span></div>
+                <div id="packSJF" class="pack"><button onclick="mostrarForm('SJF')">SJF</button><span>El más corto será
+                        el primero en ser atendido.</span></div>
+                <div id="packRRobin" class="pack"><button onclick="mostrarForm('Round Robin')">Round
+                        Robin</button><span>Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado,
+                        pasa al siguiente.</span></div>
+            </div>
         </article>
     </section>
     <footer>
     </footer>
     <script src="app/script.js"></script>
 </body>
+
 </html>

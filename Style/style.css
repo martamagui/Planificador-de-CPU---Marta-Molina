@@ -45,21 +45,34 @@ body {
   flex-direction: column;
   align-content: flex-start;
 }
-.section_tarjeta h3 {
-  margin: 2vh;
-  text-align: center;
+
+.sub_tarjeta {
+  margin-top: 5vh;
+  margin-bottom: 2vh;
 }
-#sub_tarjeta {
+
+#subTarjeta {
+  /*cargar incial*/
   align-self: center;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 5vh;
-  margin-bottom: 2vh;
 }
+
 .pack {
   display: flex;
   flex-direction: column;
   margin: 2.5vw;
   width: 25%;
+}
+/**2a Pantalla-inputs*/
+.en_columns {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.st_titulo {
+  text-align: center;
+  margin: 2.5vw;
 }
