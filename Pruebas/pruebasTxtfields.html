@@ -16,7 +16,6 @@
     <!--Section-->
     <section id="section">
         <article class="section_tarjeta" id="tarjeta">
-            <form action=""></form>
             <form action="">
                 <div> 
                     <label for="llegada">Llegada:</label>
@@ -27,15 +26,10 @@
                     <input type="text" id="duracion" name="duracion" value=""><br>
                 </div>
                 <div> 
-                    <label for="prioridad">Prioridad: </label>
-                    <input type="text" id="prioridad" name="prioridad" value=""><br>
+                    <label for="quantum">Quantum: </label>
+                    <input type="text" id="quantum" name="quantum" value=""><br>
                 </div>
-                <div> 
-                    <label for="prioridad">Quantum: </label>
-                    <input type="text" id="prioridad" name="prioridad" value=""><br>
-                </div>
-                <input type="submit" value="Añadir">
-                <input type="submit" value="Lanzar">
+                <button onclick="añadirObj()">Añadir</button><button id="lanzar">Lanzar</button>
             </form>
         </article>
     </section>
