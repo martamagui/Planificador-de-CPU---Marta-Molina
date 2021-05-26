@@ -74,11 +74,18 @@ function establecerQtum(pram) {
 }
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
-function crearProceso(llegada, duracion, presente, enEjecucion) {
-  //ints
-  this.llegda = llegada;
-  this.duracion = duracion;
-  //Boleeans
-  this.presente = presente;
-  this.enEjecucion = enEjecucion;
+class Proceso{
+  constructor (llegada, duracion, presente, enEjecucion){
+    //ints
+    this.llegada = llegada;
+    this.duracion = duracion;
+    //Boleeans
+    this.presente = presente;
+    this.enEjecucion = enEjecucion;
+  }
+  set setLLegada(valor){
+    this.llegada=valor;
+  }
+ 
 }
+
