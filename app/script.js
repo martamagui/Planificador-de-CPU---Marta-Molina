@@ -116,6 +116,8 @@ let Qtum;
 function annadirProceso(){
   let llegada= parseInt(document.getElementById("Llegada").value);
   let duracion=parseInt(document.getElementById("Duracion").value);
+  document.getElementById("Llegada").value="";
+  document.getElementById("Duracion").value="";
   console.log(llegada);
   let procc= new Proceso(llegada, duracion,false, false);
   arrProcesos.pop(procc);
