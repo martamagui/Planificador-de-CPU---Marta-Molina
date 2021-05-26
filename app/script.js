@@ -83,8 +83,18 @@ class Proceso{
     this.presente = presente;
     this.enEjecucion = enEjecucion;
   }
+  //SETTERS
   set setLLegada(valor){
     this.llegada=valor;
+  }
+  set setDuracion(valor){
+    this.llegada=valor;
+  }
+  set setPresente(valor){
+    this.presente=valor;
+  }
+  set setEnEjecucion(valor){
+    this.enEjecucion=valor;
   }
  
 }
