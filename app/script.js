@@ -21,7 +21,7 @@ function mostrarForm(param) {
 
   let annadir = document.createElement("button");
   annadir.setAttribute("id", "annadir");
-  annadir.setAttribute("onclick", "crearProceso");
+  annadir.setAttribute("onclick", "annadirProceso()");
   annadir.innerHTML = "Añadir";
   let lanzar = document.createElement("button");
   lanzar.setAttribute("id", "lanzar");
@@ -96,6 +96,28 @@ class Proceso{
   set setEnEjecucion(valor){
     this.enEjecucion=valor;
   }
- 
+  //GETTER
+  get getLlegada(){
+    return this.llegada;
+  }
+  get getDuracion(){
+    return this.duracion;
+  }
+  get getPresente(){
+    return this.duracion;
+  }
+  get getEnEjecucion(){
+    return this.enEjecucion;
+  }
 }
 
+let arrProcesos=new Array;
+let Qtum;
+function annadirProceso(){
+  let llegada= parseInt(document.getElementById("Llegada").value);
+  let duracion=parseInt(document.getElementById("Duracion").value);
+  console.log(llegada);
+  let procc= new Proceso(llegada, duracion,false, false);
+  arrProcesos.pop(procc);
+  console.log(procc);
+}
