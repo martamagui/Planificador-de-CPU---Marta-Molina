@@ -67,9 +67,9 @@ function mostrarForm(param) {
   subTarjeta.appendChild(lanzar);
 }
 
-//********************//
-//********POO********//
-//********************//
+//*****************************************************************************************//
+//******************************************POO********************************************//
+//****************************************************************************************//
 let qtum;
 function establecerQtum(pram) {
   qtum = param;
@@ -126,5 +126,33 @@ function annadirProceso(){
   console.log(procc);
 }
 function imprimirArray(){
+  arrProcesos.sort(compare);
   console.log(arrProcesos);
+}
+//Ordenar por llegada
+function compareLlegada(a, b) {
+  const itemA = a.llegada;
+  const itemB = b.llegada;
+
+  let comparison = 0;
+  if (itemA > itemB) {
+    comparison = 1;
+  } else if (itemA < itemB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+//Ordenar por duración
+function compareDuracion(a, b) {
+  
+  const itemA = a.duracion;
+  const itemB = b.duracion;
+
+  let comparison = 0;
+  if (itemA > itemB) {
+    comparison = 1;
+  } else if (itemA < itemB) {
+    comparison = -1;
+  }
+  return comparison;
 }
