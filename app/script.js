@@ -25,7 +25,7 @@ function mostrarForm(param) {
   annadir.innerHTML = "Añadir";
   let lanzar = document.createElement("button");
   lanzar.setAttribute("id", "lanzar");
-  lanzar.setAttribute("onclick", param + "()");
+  lanzar.setAttribute("onclick", /*param + "()"*/ "imprimirArray()");
   lanzar.innerHTML = "Lanzar";
 
   if (param == "metodoFIFO") {
@@ -67,7 +67,9 @@ function mostrarForm(param) {
   subTarjeta.appendChild(lanzar);
 }
 
+//********************//
 //********POO********//
+//********************//
 let qtum;
 function establecerQtum(pram) {
   qtum = param;
@@ -120,6 +122,9 @@ function annadirProceso(){
   document.getElementById("Duracion").value="";
   console.log(llegada);
   let procc= new Proceso(llegada, duracion,false, false);
-  arrProcesos.pop(procc);
+  arrProcesos.push(procc);
   console.log(procc);
+}
+function imprimirArray(){
+  console.log(arrProcesos);
 }
