@@ -76,3 +76,24 @@ body {
   text-align: center;
   margin: 2.5vw;
 }
+
+/*
+***************************************************
+********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
+**************** |G|R|A|F|I|C|A|S| ****************
+********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
+***************************************************
+*/
+.contenedor {
+  width: 50%;
+}
+
+/*datos*/
+.tabla {
+  width: auto; /*para que no de error, quitar luego*/
+}
+
+/*representación gráfica*/
+.grafica {
+  width: auto; /*para que no de error, quitar luego*/
+}

@@ -3,7 +3,9 @@
  * */
 let tarjeta = document.getElementById("tarjeta");
 let subTarjeta = document.createElement("div");
+let subTarjeta_hija= document.createElement("div");
 subTarjeta.setAttribute("class", "sub_tarjeta en_columns");
+subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
 
 //VACIAR Y PASAR A LOS CAMPOS DE TEXTO
 function mostrarForm(param) {
@@ -18,6 +20,7 @@ function mostrarForm(param) {
   let explicacion = document.createElement("span");
   explicacion.setAttribute("class", "st_texto");
   let formulario = document.createElement("form");
+  subTarjeta_hija.appendChild(formulario);
 
   let annadir = document.createElement("button");
   annadir.setAttribute("id", "annadir");
@@ -46,6 +49,7 @@ function mostrarForm(param) {
   }
   subTarjeta.appendChild(titulo);
   subTarjeta.appendChild(explicacion);
+  
   //cossas dek for
   for (let i = 0; i < num; ++i) {
     let dInput = document.createElement("div");
@@ -62,22 +66,30 @@ function mostrarForm(param) {
     formulario.appendChild(dInput);
   }
 
-  subTarjeta.appendChild(formulario);
+  subTarjeta.appendChild(subTarjeta_hija);
   subTarjeta.appendChild(annadir);
   subTarjeta.appendChild(lanzar);
 }
 
-//*****************************************************************************************//
-//******************************************POO********************************************//
-//****************************************************************************************//
+/*
+************************************************
+ ************ _____   ____   ____  *************
+ ************ |  __ \ / __ \ / __ \ ************
+ ************ | |__) | |  | | |  | |************
+ ************ |  ___/| |  | | |  | |************
+ ************ | |    | |__| | |__| |************
+ ************ |_|     \____/ \____/*************
+ ***********************************************
+ */
+
 let qtum;
 function establecerQtum(pram) {
   qtum = param;
 }
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
-class Proceso{
-  constructor (llegada, duracion, presente, enEjecucion){
+class Proceso {
+  constructor(llegada, duracion, presente, enEjecucion) {
     //ints
     this.llegada = llegada;
     this.duracion = duracion;
@@ -86,50 +98,51 @@ class Proceso{
     this.enEjecucion = enEjecucion;
   }
   //SETTERS
-  set setLLegada(valor){
-    this.llegada=valor;
+  set setLLegada(valor) {
+    this.llegada = valor;
   }
-  set setDuracion(valor){
-    this.llegada=valor;
+  set setDuracion(valor) {
+    this.llegada = valor;
   }
-  set setPresente(valor){
-    this.presente=valor;
+  set setPresente(valor) {
+    this.presente = valor;
   }
-  set setEnEjecucion(valor){
-    this.enEjecucion=valor;
+  set setEnEjecucion(valor) {
+    this.enEjecucion = valor;
   }
   //GETTER
-  get getLlegada(){
+  get getLlegada() {
     return this.llegada;
   }
-  get getDuracion(){
+  get getDuracion() {
     return this.duracion;
   }
-  get getPresente(){
+  get getPresente() {
     return this.duracion;
   }
-  get getEnEjecucion(){
+  get getEnEjecucion() {
     return this.enEjecucion;
   }
 }
 
-let arrProcesos=new Array;
+let arrProcesos = new Array();
 let Qtum;
-function annadirProceso(){
-  let llegada= parseInt(document.getElementById("Llegada").value);
-  let duracion=parseInt(document.getElementById("Duracion").value);
-  document.getElementById("Llegada").value="";
-  document.getElementById("Duracion").value="";
+function annadirProceso() {
+  let llegada = parseInt(document.getElementById("Llegada").value);
+  let duracion = parseInt(document.getElementById("Duracion").value);
+  document.getElementById("Llegada").value = "";
+  document.getElementById("Duracion").value = "";
   console.log(llegada);
-  let procc= new Proceso(llegada, duracion,false, false);
+  let procc = new Proceso(llegada, duracion, false, false);
   arrProcesos.push(procc);
   console.log(procc);
 }
-function imprimirArray(){
+function imprimirArray() {
   arrProcesos.sort(compare);
   console.log(arrProcesos);
 }
-//Ordenar por llegada
+
+//Ordenar Procesos por llegada
 function compareLlegada(a, b) {
   const itemA = a.llegada;
   const itemB = b.llegada;
@@ -142,9 +155,9 @@ function compareLlegada(a, b) {
   }
   return comparison;
 }
-//Ordenar por duración
+
+//Ordenar Procesos por duración
 function compareDuracion(a, b) {
-  
   const itemA = a.duracion;
   const itemB = b.duracion;
 
@@ -155,4 +168,31 @@ function compareDuracion(a, b) {
     comparison = -1;
   }
   return comparison;
+}
+/*
+***************************************************
+********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
+**********|C|R|E|A|R| |G|R|A|F|I|C|A|S| ***********
+********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ *********
+***************************************************
+*/
+let contenedorTabla= document.createElement("div");
+let contenedorGrafica=document.createElement("div");
+contenedorTabla.setAttribute("class","contenedor");
+contenedorGrafica.setAttribute("class","contenedor");
+
+let tabla = document.createElement("table");
+let grafica= document.createElement("table");
+tabla.setAttribute("class", "tabla");
+grafica.setAttribute("class", "grafica");
+contenedorTabla.appendChild(tabla);
+contenedorGrafica.appendChild(grafica);
+
+/*
+********************| FIFO |********************
+  */                         
+
+
+function metodoFIFO(){
+subTarjeta_hija.innerHTML="";
 }
