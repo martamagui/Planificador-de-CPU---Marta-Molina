@@ -66,9 +66,9 @@ function mostrarForm(param) {
     formulario.appendChild(dInput);
   }
 
+  subTarjeta_hija.appendChild(annadir);
+  subTarjeta_hija.appendChild(lanzar);
   subTarjeta.appendChild(subTarjeta_hija);
-  subTarjeta.appendChild(annadir);
-  subTarjeta.appendChild(lanzar);
 }
 
 /*
@@ -222,28 +222,32 @@ function metodoFIFO() {
   asignarIdProcYtrs();
   console.log(arrProcesos);
   let i = 0;
-  let momento=0;
-  
+  let momento = 0;
+
   while (arrProcesos[arrProcesos.length - 1].terminado == false) {
-    console.log(arrProcesos[i].llegada);
-    if ((arrProcesos[i].llegada) <= i) {
+    let llegadaProcActual = arrProcesos[i].getLlegada;
+    console.log(`I-> ${i} Momento -> ${momento}`);
+    let duracionExam = arrProcesos[i].duracion - 1;
+    if (llegadaProcActual <= momento) {
       arrProcesos[i].enEjecucion = true;
       arrProcesos[i].presente = false;
 
       for (let j = 0; j < arrProcesos[i].duracion; ++j) {
-
         for (let k = 0; k < arrProcesos.length; ++k) {
-
-          let trPadre = document.getElementById((arrProcesos[k].id));
+          let llegadaExam = arrProcesos[k].llegada;
+          let terminadoSiNo = arrProcesos[k].terminado;
+          if (llegadaExam <= momento && terminadoSiNo == false) {
+            arrProcesos[j].presente = true;
+          }
+          let trPadre = document.getElementById(arrProcesos[k].id);
           let tdHijo = document.createElement("td");
-          console.log(tdHijo);
 
-          if ((arrProcesos[k].enEjecucion) == true) {
+          if (arrProcesos[k].enEjecucion == true) {
             /*poner class ejecucion-> verde*/
             tdHijo.setAttribute("class", "td_enEjecucion");
           } else if (
-            (arrProcesos[k].enEjecucion) == false &&
-            (arrProcesos[k].presente) == true
+            arrProcesos[k].enEjecucion == false &&
+            arrProcesos[k].presente == true
           ) {
             /*poner class ejecucion-> gris*/
             tdHijo.setAttribute("class", "td_enEspera");
@@ -253,14 +257,40 @@ function metodoFIFO() {
           }
           trPadre.appendChild(tdHijo);
         }
-        if(j==arrProcesos[i].duracion){
-          arrProcesos[i].terminado=true;
-          arrProcesos[i].enEjecucion=false;
-        }
-      }
-    }else{
 
+        if (j == duracionExam) {
+          arrProcesos[i].terminado = true;
+          arrProcesos[i].enEjecucion = false;
+        }
+        ++momento;
+      }
+    } else {
+      for (let k = 0; k < arrProcesos.length; ++k) {
+        let llegadaExam = arrProcesos[k].llegada;
+        let terminadoSiNo = arrProcesos[k].terminado;
+        if (llegadaExam <= momento && terminadoSiNo == false) {
+          arrProcesos[j].presente = true;
+        }
+        let trPadre = document.getElementById(arrProcesos[k].id);
+        let tdHijo = document.createElement("td");
+        console.log(tdHijo);
+
+        if (arrProcesos[k].enEjecucion == true) {
+          /*poner class ejecucion-> verde*/
+          tdHijo.setAttribute("class", "td_enEjecucion");
+        } else if (
+          arrProcesos[k].enEjecucion == false &&
+          arrProcesos[k].presente == true
+        ) {
+          /*poner class ejecucion-> gris*/
+          tdHijo.setAttribute("class", "td_enEspera");
+        } else {
+          /*poner class ejecucion-> blanco*/
+          tdHijo.setAttribute("class", "td_NoPresente");
+        }
+        trPadre.appendChild(tdHijo);
+      }
+      ++momento;
     }
-    ++i;
   }
 }
