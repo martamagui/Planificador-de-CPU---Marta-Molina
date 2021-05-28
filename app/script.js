@@ -224,17 +224,19 @@ function metodoFIFO() {
   let i = 0;
   let momento = 0;
 
-  while (arrProcesos[arrProcesos.length - 1].terminado == false) {
+  while (arrProcesos[arrProcesos.length - 1].terminado == false||i>arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
     console.log(`I-> ${i} Momento -> ${momento}`);
+    console.log(arrProcesos);
     let duracionExam = arrProcesos[i].duracion - 1;
     if (llegadaProcActual <= momento) {
       arrProcesos[i].enEjecucion = true;
       arrProcesos[i].presente = false;
 
-      for (let j = 0; j < arrProcesos[i].duracion; ++j) {
+      for (let j = 0; j < (arrProcesos[i].duracion); ++j) {
         for (let k = 0; k < arrProcesos.length; ++k) {
-          let llegadaExam = arrProcesos[k].llegada;
+          console.log(`K-> ${k}`);
+          let llegadaExam = (arrProcesos[k]||{}).llegada;
           let terminadoSiNo = arrProcesos[k].terminado;
           if (llegadaExam <= momento && terminadoSiNo == false) {
             arrProcesos[j].presente = true;
@@ -247,7 +249,7 @@ function metodoFIFO() {
             tdHijo.setAttribute("class", "td_enEjecucion");
           } else if (
             arrProcesos[k].enEjecucion == false &&
-            arrProcesos[k].presente == true
+            arrProcesos[k].presente == true && arrProcesos[k].terminado==false
           ) {
             /*poner class ejecucion-> gris*/
             tdHijo.setAttribute("class", "td_enEspera");
@@ -261,6 +263,8 @@ function metodoFIFO() {
         if (j == duracionExam) {
           arrProcesos[i].terminado = true;
           arrProcesos[i].enEjecucion = false;
+          ++i;
+          ++j
         }
         ++momento;
       }
