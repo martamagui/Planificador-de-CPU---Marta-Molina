@@ -3,7 +3,7 @@
  * */
 let tarjeta = document.getElementById("tarjeta");
 let subTarjeta = document.createElement("div");
-let subTarjeta_hija= document.createElement("div");
+let subTarjeta_hija = document.createElement("div");
 subTarjeta.setAttribute("class", "sub_tarjeta en_columns");
 subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
 
@@ -49,7 +49,7 @@ function mostrarForm(param) {
   }
   subTarjeta.appendChild(titulo);
   subTarjeta.appendChild(explicacion);
-  
+
   //cossas dek for
   for (let i = 0; i < num; ++i) {
     let dInput = document.createElement("div");
@@ -72,7 +72,7 @@ function mostrarForm(param) {
 }
 
 /*
-************************************************
+ ************************************************
  ************ _____   ____   ____  *************
  ************ |  __ \ / __ \ / __ \ ************
  ************ | |__) | |  | | |  | |************
@@ -89,8 +89,9 @@ function establecerQtum(pram) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(llegada, duracion, presente, enEjecucion) {
+  constructor(id,llegada, duracion, presente, enEjecucion) {
     //ints
+    this. id = id;
     this.llegada = llegada;
     this.duracion = duracion;
     //Boleeans
@@ -98,6 +99,9 @@ class Proceso {
     this.enEjecucion = enEjecucion;
   }
   //SETTERS
+  set setId(valor){
+    this.id=valor;
+  }
   set setLLegada(valor) {
     this.llegada = valor;
   }
@@ -111,6 +115,9 @@ class Proceso {
     this.enEjecucion = valor;
   }
   //GETTER
+  get getId(){
+    return this.id;
+  }
   get getLlegada() {
     return this.llegada;
   }
@@ -133,17 +140,12 @@ function annadirProceso() {
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
   console.log(llegada);
-  let procc = new Proceso(llegada, duracion, false, false);
+  let procc = new Proceso("",llegada, duracion, false, false);
   arrProcesos.push(procc);
   console.log(procc);
 }
-function imprimirArray() {
-  arrProcesos.sort(compare);
-  console.log(arrProcesos);
-}
-
 //Ordenar Procesos por llegada
-function compareLlegada(a, b) {
+function compararLlegada(a, b) {
   const itemA = a.llegada;
   const itemB = b.llegada;
 
@@ -157,7 +159,7 @@ function compareLlegada(a, b) {
 }
 
 //Ordenar Procesos por duración
-function compareDuracion(a, b) {
+function compararDuracion(a, b) {
   const itemA = a.duracion;
   const itemB = b.duracion;
 
@@ -169,30 +171,46 @@ function compareDuracion(a, b) {
   }
   return comparison;
 }
+//Dar id a cada proceso
+function darIdaCadaProceso(){
+for(let i=0; i<arrProcesos.length;++i){
+
+}
+}
+
 /*
-***************************************************
-********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
-**********|C|R|E|A|R| |G|R|A|F|I|C|A|S| ***********
-********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ *********
-***************************************************
-*/
-let contenedorTabla= document.createElement("div");
-let contenedorGrafica=document.createElement("div");
-contenedorTabla.setAttribute("class","contenedor");
-contenedorGrafica.setAttribute("class","contenedor");
+ ***************************************************
+ ********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
+ **********|C|R|E|A|R| |G|R|A|F|I|C|A|S| ***********
+ ********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ *********
+ ***************************************************
+ */
+let contenedorTabla = document.createElement("div");
+let contenedorGrafica = document.createElement("div");
+contenedorTabla.setAttribute("class", "contenedor");
+contenedorGrafica.setAttribute("class", "contenedor");
 
 let tabla = document.createElement("table");
-let grafica= document.createElement("table");
+let grafica = document.createElement("table");
 tabla.setAttribute("class", "tabla");
 grafica.setAttribute("class", "grafica");
 contenedorTabla.appendChild(tabla);
 contenedorGrafica.appendChild(grafica);
 
 /*
-********************| FIFO |********************
-  */                         
+ ********************| FIFO |********************
+ */
+
+function metodoFIFO() {
+  subTarjeta_hija.innerHTML = "";
+  arrProcesos.sort(compararLlegada);
 
 
-function metodoFIFO(){
-subTarjeta_hija.innerHTML="";
+
+  darIdaCadaProceso();
+  console.log(arrProcesos);
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    let 
+  }
+
 }
