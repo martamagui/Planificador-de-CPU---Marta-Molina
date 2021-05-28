@@ -91,9 +91,23 @@ body {
 /*datos*/
 .tabla {
   width: auto; /*para que no de error, quitar luego*/
+  border-color: 1px black;
 }
 
 /*representación gráfica*/
 .grafica {
   width: auto; /*para que no de error, quitar luego*/
+}
+
+.td_enEjecucion {
+  padding: 2vh;
+  background-color: chartreuse;
+}
+.td_enEspera {
+  padding: 2vh;
+  background-color: lightslategray;
+}
+.td_NoPresente {
+  padding: 2vh;
+  background-color: whitesmoke;
 }

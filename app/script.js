@@ -28,7 +28,7 @@ function mostrarForm(param) {
   annadir.innerHTML = "Añadir";
   let lanzar = document.createElement("button");
   lanzar.setAttribute("id", "lanzar");
-  lanzar.setAttribute("onclick", /*param + "()"*/ "imprimirArray()");
+  lanzar.setAttribute("onclick", param + "()");
   lanzar.innerHTML = "Lanzar";
 
   if (param == "metodoFIFO") {
@@ -89,18 +89,19 @@ function establecerQtum(pram) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(id,llegada, duracion, presente, enEjecucion) {
+  constructor(id, llegada, duracion, presente, enEjecucion, terminado) {
     //ints
-    this. id = id;
+    this.id = id;
     this.llegada = llegada;
     this.duracion = duracion;
     //Boleeans
     this.presente = presente;
     this.enEjecucion = enEjecucion;
+    this.terminado = terminado;
   }
   //SETTERS
-  set setId(valor){
-    this.id=valor;
+  set setId(valor) {
+    this.id = valor;
   }
   set setLLegada(valor) {
     this.llegada = valor;
@@ -114,8 +115,11 @@ class Proceso {
   set setEnEjecucion(valor) {
     this.enEjecucion = valor;
   }
+  set setTerminado(valor) {
+    this.terminado = valor;
+  }
   //GETTER
-  get getId(){
+  get getId() {
     return this.id;
   }
   get getLlegada() {
@@ -130,6 +134,9 @@ class Proceso {
   get getEnEjecucion() {
     return this.enEjecucion;
   }
+  get getTerminado() {
+    return this.terminado;
+  }
 }
 
 let arrProcesos = new Array();
@@ -139,10 +146,10 @@ function annadirProceso() {
   let duracion = parseInt(document.getElementById("Duracion").value);
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
-  console.log(llegada);
-  let procc = new Proceso("",llegada, duracion, false, false);
+  //console.log(llegada);
+  let procc = new Proceso("", llegada, duracion, false, false, false);
   arrProcesos.push(procc);
-  console.log(procc);
+  //console.log(procc);
 }
 //Ordenar Procesos por llegada
 function compararLlegada(a, b) {
@@ -172,11 +179,6 @@ function compararDuracion(a, b) {
   return comparison;
 }
 //Dar id a cada proceso
-function darIdaCadaProceso(){
-for(let i=0; i<arrProcesos.length;++i){
-
-}
-}
 
 /*
  ***************************************************
@@ -197,20 +199,68 @@ grafica.setAttribute("class", "grafica");
 contenedorTabla.appendChild(tabla);
 contenedorGrafica.appendChild(grafica);
 
+function asignarIdProcYtrs() {
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    arrProcesos[i].id = "Proceso " + (i + 1);
+    let tr = document.createElement("tr");
+    tr.setAttribute("id", "Proceso " + (i + 1));
+    grafica.appendChild(tr);
+  }
+}
+
 /*
  ********************| FIFO |********************
  */
 
 function metodoFIFO() {
   subTarjeta_hija.innerHTML = "";
+  subTarjeta_hija.appendChild(contenedorTabla);
+  subTarjeta_hija.appendChild(contenedorGrafica);
+
   arrProcesos.sort(compararLlegada);
 
-
-
-  darIdaCadaProceso();
+  asignarIdProcYtrs();
   console.log(arrProcesos);
-  for (let i = 0; i < arrProcesos.length; ++i) {
-    let 
-  }
+  let i = 0;
+  let momento=0;
+  
+  while (arrProcesos[arrProcesos.length - 1].terminado == false) {
+    console.log(arrProcesos[i].llegada);
+    if ((arrProcesos[i].llegada) <= i) {
+      arrProcesos[i].enEjecucion = true;
+      arrProcesos[i].presente = false;
 
+      for (let j = 0; j < arrProcesos[i].duracion; ++j) {
+
+        for (let k = 0; k < arrProcesos.length; ++k) {
+
+          let trPadre = document.getElementById((arrProcesos[k].id));
+          let tdHijo = document.createElement("td");
+          console.log(tdHijo);
+
+          if ((arrProcesos[k].enEjecucion) == true) {
+            /*poner class ejecucion-> verde*/
+            tdHijo.setAttribute("class", "td_enEjecucion");
+          } else if (
+            (arrProcesos[k].enEjecucion) == false &&
+            (arrProcesos[k].presente) == true
+          ) {
+            /*poner class ejecucion-> gris*/
+            tdHijo.setAttribute("class", "td_enEspera");
+          } else {
+            /*poner class ejecucion-> blanco*/
+            tdHijo.setAttribute("class", "td_NoPresente");
+          }
+          trPadre.appendChild(tdHijo);
+        }
+        if(j==arrProcesos[i].duracion){
+          arrProcesos[i].terminado=true;
+          arrProcesos[i].enEjecucion=false;
+        }
+      }
+    }else{
+
+    }
+    ++i;
+  }
 }
