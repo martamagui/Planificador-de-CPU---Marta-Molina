@@ -115,6 +115,7 @@ class Proceso {
   set setEnEjecucion(valor) {
     this.enEjecucion = valor;
   }
+
   set setTerminado(valor) {
     this.terminado = valor;
   }
@@ -237,11 +238,18 @@ function metodoFIFO() {
       let duracionBucle= (arrProcesos[i].duracion);
       for (let j = 0; j <duracionBucle; ++j) {
         for (let k = 0; k < arrProcesos.length; ++k) {
+
           console.log(`Momento -> ${momento}`);
+
           let llegadaExam = (arrProcesos[k]||{}).llegada;
           let terminadoSiNo = arrProcesos[k].terminado;
-          if (llegadaExam <= momento && terminadoSiNo == false) {
-           ( arrProcesos[j]||{}).presente = true;
+          let enEjecucion =arrProcesos[k].enEjecucion;
+
+
+          if (llegadaExam == momento && terminadoSiNo == false && enEjecucion==false) {
+            console.log(`----Cambiar a presente proceso: ${j} en momento ${momento}`);
+           (arrProcesos[j]||{}).presente=true;
+           console.log(arrProcesos[j]);
           }
           let trPadre = document.getElementById(arrProcesos[k].id);
           let tdHijo = document.createElement("td");
@@ -250,8 +258,8 @@ function metodoFIFO() {
             /*poner class ejecucion-> verde*/
             tdHijo.setAttribute("class", "td_enEjecucion");
           } else if (
-            arrProcesos[k].enEjecucion == false &&
-            arrProcesos[k].presente == true && arrProcesos[k].terminado==false
+            (arrProcesos[k].enEjecucion == false &&
+            arrProcesos[k].presente == true) && arrProcesos[k].terminado==false
           ) {
             /*poner class ejecucion-> gris*/
             tdHijo.setAttribute("class", "td_enEspera");
@@ -263,10 +271,11 @@ function metodoFIFO() {
         }
 
         if (j == duracionExam) {
+          console.log(`Cambiar TERMINADO proceso: ${i} en momento ${momento}`);
           arrProcesos[i].terminado = true;
           arrProcesos[i].enEjecucion = false;
+          console.log(arrProcesos);
           ++i;
-          ++j;
         }
         ++momento;
       }
