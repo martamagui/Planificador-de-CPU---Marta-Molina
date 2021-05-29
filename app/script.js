@@ -220,6 +220,8 @@ function metodoFIFO() {
   arrProcesos.sort(compararLlegada);
 
   asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  
   console.log(arrProcesos);
   let i = 0;
   let momento = 0;
@@ -227,19 +229,19 @@ function metodoFIFO() {
   while (arrProcesos[arrProcesos.length - 1].terminado == false||i>arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
     console.log(`I-> ${i} Momento -> ${momento}`);
-    console.log(arrProcesos);
+    //console.log(arrProcesos);
     let duracionExam = arrProcesos[i].duracion - 1;
     if (llegadaProcActual <= momento) {
       arrProcesos[i].enEjecucion = true;
       arrProcesos[i].presente = false;
-
-      for (let j = 0; j < (arrProcesos[i].duracion); ++j) {
+      let duracionBucle= (arrProcesos[i].duracion);
+      for (let j = 0; j <duracionBucle; ++j) {
         for (let k = 0; k < arrProcesos.length; ++k) {
-          console.log(`K-> ${k}`);
+          console.log(`Momento -> ${momento}`);
           let llegadaExam = (arrProcesos[k]||{}).llegada;
           let terminadoSiNo = arrProcesos[k].terminado;
           if (llegadaExam <= momento && terminadoSiNo == false) {
-            arrProcesos[j].presente = true;
+           ( arrProcesos[j]||{}).presente = true;
           }
           let trPadre = document.getElementById(arrProcesos[k].id);
           let tdHijo = document.createElement("td");
@@ -264,7 +266,7 @@ function metodoFIFO() {
           arrProcesos[i].terminado = true;
           arrProcesos[i].enEjecucion = false;
           ++i;
-          ++j
+          ++j;
         }
         ++momento;
       }
@@ -278,23 +280,22 @@ function metodoFIFO() {
         let trPadre = document.getElementById(arrProcesos[k].id);
         let tdHijo = document.createElement("td");
         console.log(tdHijo);
-
-        if (arrProcesos[k].enEjecucion == true) {
-          /*poner class ejecucion-> verde*/
-          tdHijo.setAttribute("class", "td_enEjecucion");
-        } else if (
-          arrProcesos[k].enEjecucion == false &&
-          arrProcesos[k].presente == true
-        ) {
-          /*poner class ejecucion-> gris*/
-          tdHijo.setAttribute("class", "td_enEspera");
-        } else {
           /*poner class ejecucion-> blanco*/
-          tdHijo.setAttribute("class", "td_NoPresente");
-        }
+        tdHijo.setAttribute("class", "td_NoPresente");
         trPadre.appendChild(tdHijo);
       }
       ++momento;
     }
   }
+}
+function nombrarProcesosEnGrafica(){
+  for (let k = 0; k < arrProcesos.length; ++k) {
+    let trPadre = document.getElementById(arrProcesos[k].id);
+    let tdHijo = document.createElement("td");
+    tdHijo.innerHTML=(arrProcesos[k].id);
+    tdHijo.setAttribute("class","td_texto")
+    trPadre.appendChild(tdHijo);
+    grafica.appendChild(trPadre);
+  }
+
 }

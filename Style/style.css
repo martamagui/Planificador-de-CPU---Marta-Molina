@@ -100,14 +100,17 @@ body {
 }
 
 .td_enEjecucion {
-  padding: 2vh;
+  padding: 2.2vh;
   background-color: chartreuse;
 }
 .td_enEspera {
-  padding: 2vh;
+  padding: 2.2vh;
   background-color: lightslategray;
 }
 .td_NoPresente {
-  padding: 2vh;
+  padding: 2.2vh;
   background-color: whitesmoke;
+}
+.td_texto {
+  font-size: 1.5 vh;
 }
