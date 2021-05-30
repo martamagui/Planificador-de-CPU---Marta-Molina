@@ -91,7 +91,22 @@ body {
 /*datos*/
 .tabla {
   width: auto; /*para que no de error, quitar luego*/
-  border-color: 1px black;
+  border: 1px solid black;
+  padding: 1vh;
+}
+.header_tabla {
+  display: flex;
+  background-color: rgb(200, 20, 60);
+  color: aliceblue;
+  font-weight: 400;
+}
+.tabla tr {
+  padding: 0.5vh;
+  display: flex;
+  justify-content: space-evenly;
+}
+.header_tabla td {
+  padding: 1vh;
 }
 
 /*representación gráfica*/

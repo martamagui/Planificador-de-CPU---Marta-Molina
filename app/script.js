@@ -208,10 +208,44 @@ function asignarIdProcYtrs() {
     grafica.appendChild(tr);
   }
 }
+function nombrarProcesosEnGrafica(){
+  for (let k = 0; k < arrProcesos.length; ++k) {
+    let trPadre = document.getElementById(arrProcesos[k].id);
+    let tdHijo = document.createElement("td");
+    tdHijo.innerHTML=(arrProcesos[k].id);
+    tdHijo.setAttribute("class","td_texto")
+    trPadre.appendChild(tdHijo);
+    grafica.appendChild(trPadre);
+  }
 
+}
+function baseTablaDatos(){
+  let trTitulos= document.createElement("tr");
+  trTitulos.setAttribute("class","header_tabla");
+  trTitulos.innerHTML="<td>Proceso</td><td>Llegada</td><td>T.Ejecucición</td><td>T.Respuesta</td><td>T.Espera</td><td>Penalización</td>";
+  tabla.appendChild(trTitulos);
+  for(let i=0;i<arrProcesos.length;++i){
+    let trProcc=document.createElement("tr");
+    trProcc.setAttribute("id",("datos"+(arrProcesos[i]||{}).id));
+
+    let tdId= document.createElement("td");
+    tdId.innerHTML=(arrProcesos[i]||{}).id;
+    let tdLlegada= document.createElement("td");
+    tdLlegada.innerHTML=(arrProcesos[i]||{}).llegada;
+    let tdEjecucion=document.createElement("td");
+    tdEjecucion.innerHTML=(arrProcesos[i]||{}).duracion;
+    trProcc.appendChild(tdId);
+    trProcc.appendChild(tdLlegada);
+    trProcc.appendChild(tdEjecucion);
+    tabla.appendChild(trProcc);
+  }
+
+
+}
 /*
  ********************| FIFO |********************
  */
+
 
 function metodoFIFO() {
   subTarjeta_hija.innerHTML = "";
@@ -222,6 +256,7 @@ function metodoFIFO() {
 
   asignarIdProcYtrs();
   nombrarProcesosEnGrafica();
+  baseTablaDatos();
   
   console.log(arrProcesos);
   let i = 0;
@@ -271,19 +306,9 @@ function metodoSJF(){
 
 }
 function metodoRoundRobin(){
-  
-}
-function nombrarProcesosEnGrafica(){
-  for (let k = 0; k < arrProcesos.length; ++k) {
-    let trPadre = document.getElementById(arrProcesos[k].id);
-    let tdHijo = document.createElement("td");
-    tdHijo.innerHTML=(arrProcesos[k].id);
-    tdHijo.setAttribute("class","td_texto")
-    trPadre.appendChild(tdHijo);
-    grafica.appendChild(trPadre);
-  }
 
 }
+
 function pintarColumna(col,momento){
   for (let k = 0; k < arrProcesos.length; ++k) {
     console.log(`Momento -> ${momento}`);
