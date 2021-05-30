@@ -89,11 +89,12 @@ function establecerQtum(pram) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(id, llegada, duracion, presente, enEjecucion, terminado) {
+  constructor(id, llegada, duracion, presente, enEjecucion, terminado,tEspera) {
     //ints
     this.id = id;
     this.llegada = llegada;
     this.duracion = duracion;
+    this.tEspera=tEspera;
     //Boleeans
     this.presente = presente;
     this.enEjecucion = enEjecucion;
@@ -119,6 +120,9 @@ class Proceso {
   set setTerminado(valor) {
     this.terminado = valor;
   }
+  set settEspera(valor){
+    this.tEspera =valor;
+  }
   //GETTER
   get getId() {
     return this.id;
@@ -138,6 +142,9 @@ class Proceso {
   get getTerminado() {
     return this.terminado;
   }
+  get getTEspera(){
+    return this.tEspera;
+  }
 }
 
 let arrProcesos = new Array();
@@ -148,7 +155,7 @@ function annadirProceso() {
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
   //console.log(llegada);
-  let procc = new Proceso("", llegada, duracion, false, false, false);
+  let procc = new Proceso("", llegada, duracion, false, false, false,0);
   arrProcesos.push(procc);
   //console.log(procc);
 }
@@ -227,16 +234,27 @@ function baseTablaDatos(){
   for(let i=0;i<arrProcesos.length;++i){
     let trProcc=document.createElement("tr");
     trProcc.setAttribute("id",("datos"+(arrProcesos[i]||{}).id));
-
+    if((i%2)==1){
+      trProcc.setAttribute("class","tr_par");
+    }
     let tdId= document.createElement("td");
     tdId.innerHTML=(arrProcesos[i]||{}).id;
     let tdLlegada= document.createElement("td");
     tdLlegada.innerHTML=(arrProcesos[i]||{}).llegada;
     let tdEjecucion=document.createElement("td");
     tdEjecucion.innerHTML=(arrProcesos[i]||{}).duracion;
+    let tdTRespuesta =document.createElement("td");
+    tdTRespuesta.innerHTML="0";
+    let tdTEspera=document.createElement("td");
+    tdTEspera.innerHTML= (arrProcesos[i]||{}).tEspera;
+    let tdPenalizacion=document.createElement("td");
+    tdPenalizacion.innerHTML="0";
     trProcc.appendChild(tdId);
     trProcc.appendChild(tdLlegada);
     trProcc.appendChild(tdEjecucion);
+    trProcc.appendChild(tdTRespuesta);
+    trProcc.appendChild(tdTEspera);
+    trProcc.appendChild(tdPenalizacion);
     tabla.appendChild(trProcc);
   }
 
@@ -256,7 +274,7 @@ function metodoFIFO() {
 
   asignarIdProcYtrs();
   nombrarProcesosEnGrafica();
-  baseTablaDatos();
+  
   
   console.log(arrProcesos);
   let i = 0;
@@ -301,6 +319,7 @@ function metodoFIFO() {
       ++momento;
     }
   }
+  baseTablaDatos();
 }
 function metodoSJF(){
 
@@ -333,6 +352,7 @@ function pintarColumna(col,momento){
     ) {
       /*poner class ejecucion-> gris*/
       tdHijo.setAttribute("class", "td_enEspera");
+      ++arrProcesos[k].tEspera;
     } else {
       /*poner class ejecucion-> blanco*/
       tdHijo.setAttribute("class", "td_NoPresente");

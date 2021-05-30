@@ -47,8 +47,8 @@ body {
 }
 
 .sub_tarjeta {
-  margin-top: 5vh;
-  margin-bottom: 2vh;
+  margin-top: 4vh;
+  margin-bottom: 4vh;
 }
 
 #subTarjeta {
@@ -71,10 +71,14 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-content: center;
 }
 .st_titulo {
   text-align: center;
   margin: 2.5vw;
+}
+.st_texto {
+  text-align: center;
 }
 
 /*
@@ -85,25 +89,26 @@ body {
 ***************************************************
 */
 .contenedor {
-  width: 50%;
+  display: flex;
+  justify-content: center;
 }
 
 /*datos*/
 .tabla {
-  width: auto; /*para que no de error, quitar luego*/
-  border: 1px solid black;
-  padding: 1vh;
+  margin-top: 2vh;
+  margin-bottom: 4vh;
+  width: auto;
 }
 .header_tabla {
-  display: flex;
   background-color: rgb(200, 20, 60);
   color: aliceblue;
   font-weight: 400;
 }
-.tabla tr {
-  padding: 0.5vh;
-  display: flex;
-  justify-content: space-evenly;
+.tabla td {
+  text-align: center;
+}
+.tr_par {
+  background-color: rgb(240, 240, 240);
 }
 .header_tabla td {
   padding: 1vh;
@@ -112,6 +117,8 @@ body {
 /*representación gráfica*/
 .grafica {
   width: auto; /*para que no de error, quitar luego*/
+  margin-bottom: 4vh;
+  margin-top: 4vh;
 }
 
 .td_enEjecucion {
