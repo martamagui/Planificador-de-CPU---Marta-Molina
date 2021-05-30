@@ -267,6 +267,12 @@ function metodoFIFO() {
     }
   }
 }
+function metodoSJF(){
+
+}
+function metodoRoundRobin(){
+  
+}
 function nombrarProcesosEnGrafica(){
   for (let k = 0; k < arrProcesos.length; ++k) {
     let trPadre = document.getElementById(arrProcesos[k].id);
@@ -280,13 +286,10 @@ function nombrarProcesosEnGrafica(){
 }
 function pintarColumna(col,momento){
   for (let k = 0; k < arrProcesos.length; ++k) {
-
     console.log(`Momento -> ${momento}`);
 
     let llegadaExam = (arrProcesos[k]).llegada;
     let terminadoSiNo = arrProcesos[k].terminado;
-    let enEjecucion =arrProcesos[k].enEjecucion;
-
 
     if (llegadaExam == momento && terminadoSiNo == false) {
       console.log(`----Cambiar a presente proceso: ${col} en momento ${momento}`);
