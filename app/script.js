@@ -307,15 +307,17 @@ function baseTablaDatos() {
   contenedorTabla.appendChild(promedios);
 
 }
+function prepararPantallaTablas() {
+  subTarjeta_hija.innerHTML = "";
+  subTarjeta_hija.appendChild(contenedorTabla);
+  subTarjeta_hija.appendChild(contenedorGrafica);
+}
 /*
  ********************| FIFO |********************
  */
 let momento = 0;
 function metodoFIFO() {
-  subTarjeta_hija.innerHTML = "";
-  subTarjeta_hija.appendChild(contenedorTabla);
-  subTarjeta_hija.appendChild(contenedorGrafica);
-
+  prepararPantallaTablas();
   arrProcesos.sort(compararLlegada);
 
   asignarIdProcYtrs();
@@ -323,8 +325,35 @@ function metodoFIFO() {
 
   console.log(arrProcesos);
   let i = 0;
+  bubleParaFIFOySJF();
+  baseTablaDatos();
+}
 
+//Shortest Jod First
+function metodoSJF() {
+  prepararPantallaTablas();
+  //Primero ordena por llegada y luego duración
+  arrProcesos.sort(compararDuracion);
+  arrProcesos.sort(compararLlegada);
 
+  asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  console.log(arrProcesos);
+
+  bubleParaFIFOySJF();
+  
+}
+
+function metodoRoundRobin() {
+  prepararPantallaTablas();
+  arrProcesos.sort(compararLlegada);
+
+  asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  console.log(arrProcesos);
+}
+function bubleParaFIFOySJF(){
+  let i = 0;
   while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
     console.log(`I-> ${i} Momento -> ${momento}`);
@@ -332,30 +361,21 @@ function metodoFIFO() {
     let duracionExam = arrProcesos[i].duracion - 1;
 
     if (llegadaProcActual <= momento) {
-      arrProcesos[i].enEjecucion = true;
-      arrProcesos[i].presente = false;
-      arrProcesos[i].inicio = momento;
+      establecerEnejecucion(i);
       let duracionBucle = arrProcesos[i].duracion;
+
       for (let j = 0; j < duracionBucle; ++j) {
+
         pintarColumna(j, momento);
 
         if (j == duracionExam) {
-          console.log(`Cambiar TERMINADO proceso: ${i} en momento ${momento}`);
-          arrProcesos[i].fin = momento + 1;
-          arrProcesos[i].terminado = true;
-          arrProcesos[i].enEjecucion = false;
-          console.log(arrProcesos);
+          establecerTerminado(i);
           ++i;
         }
         ++momento;
       }
     } else {
       for (let k = 0; k < arrProcesos.length; ++k) {
-        let llegadaExam = arrProcesos[k].llegada;
-        let terminadoSiNo = arrProcesos[k].terminado;
-        if (llegadaExam <= momento && terminadoSiNo == false) {
-          arrProcesos[j].presente = true;
-        }
         let trPadre = document.getElementById(arrProcesos[k].id);
         let tdHijo = document.createElement("td");
         console.log(tdHijo);
@@ -366,33 +386,19 @@ function metodoFIFO() {
       ++momento;
     }
   }
-  baseTablaDatos();
 }
-
-//Shortest Jod First
-function metodoSJF() {
-  subTarjeta_hija.innerHTML = "";
-  subTarjeta_hija.appendChild(contenedorTabla);
-  subTarjeta_hija.appendChild(contenedorGrafica);
-
-  arrProcesos.sort(compararLlegada);
-
-  asignarIdProcYtrs();
-  nombrarProcesosEnGrafica();
+function establecerEnejecucion(i) {
+  arrProcesos[i].enEjecucion = true;
+  arrProcesos[i].presente = false;
+  arrProcesos[i].inicio = momento;
+}
+function establecerTerminado(i) {
+  console.log(`Cambiar TERMINADO proceso: ${i} en momento ${momento}`);
+  arrProcesos[i].fin = momento + 1;
+  arrProcesos[i].terminado = true;
+  arrProcesos[i].enEjecucion = false;
   console.log(arrProcesos);
-
-  let i = 0;
-  let momento = 0;
-  while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
-    //buscar presentes y comparar duración
-
-
-
-  }
 }
-
-function metodoRoundRobin() { }
-
 function establecerPresentes(col) {
   for (let i = 0; i < arrProcesos.length; ++i) {
     let llegadaExam = arrProcesos[i].llegada;
