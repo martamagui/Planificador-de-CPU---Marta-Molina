@@ -323,36 +323,6 @@ function metodoFIFO() {
 
   console.log(arrProcesos);
   let i = 0;
-  bubleParaFIFOySJF();
-  baseTablaDatos();
-}
-
-//Shortest Jod First
-function metodoSJF() {
-  prepararPantallaTablas();
-  //Primero ordena por llegada y luego duración
-  arrProcesos.sort(compararDuracion);
-  arrProcesos.sort(compararLlegada);
-
-  asignarIdProcYtrs();
-  nombrarProcesosEnGrafica();
-  console.log(arrProcesos);
-
-  bubleParaFIFOySJF();
-  baseTablaDatos();
-
-}
-
-function metodoRoundRobin() {
-  prepararPantallaTablas();
-  arrProcesos.sort(compararLlegada);
-
-  asignarIdProcYtrs();
-  nombrarProcesosEnGrafica();
-  console.log(arrProcesos);
-}
-function bubleParaFIFOySJF() {
-  let i = 0;
   while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
     console.log(`I-> ${i} Momento -> ${momento}`);
@@ -385,7 +355,34 @@ function bubleParaFIFOySJF() {
       ++momento;
     }
   }
+  baseTablaDatos();
 }
+
+//Shortest Jod First
+function metodoSJF() {
+  prepararPantallaTablas();
+  //Primero ordena por llegada y luego duración
+  arrProcesos.sort(compararDuracion);
+  arrProcesos.sort(compararLlegada);
+
+  asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  console.log(arrProcesos);
+
+  
+  baseTablaDatos();
+
+}
+
+function metodoRoundRobin() {
+  prepararPantallaTablas();
+  arrProcesos.sort(compararLlegada);
+
+  asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  console.log(arrProcesos);
+}
+
 function establecerEnejecucion(i) {
   arrProcesos[i].enEjecucion = true;
   arrProcesos[i].presente = false;
