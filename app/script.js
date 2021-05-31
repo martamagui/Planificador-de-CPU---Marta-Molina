@@ -6,13 +6,19 @@ let subTarjeta = document.createElement("div");
 let subTarjeta_hija = document.createElement("div");
 subTarjeta.setAttribute("class", "sub_tarjeta en_columns");
 subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
-
+let annadir = document.createElement("button");
+annadir.setAttribute("id", "annadir");
+annadir.setAttribute("onclick", "annadirProceso()");
+annadir.innerHTML = "Añadir";
+let lanzar = document.createElement("button");
+lanzar.setAttribute("id", "lanzar");
+lanzar.innerHTML = "Lanzar";
+let campos = ["Llegada", "Duracion", "Qtum"];
 //VACIAR Y PASAR A LOS CAMPOS DE TEXTO
 function mostrarForm(param) {
   console.log(param);
   tarjeta.innerHTML = "";
   let num;
-  let campos = ["Llegada", "Duracion", "Qtum"];
   tarjeta.appendChild(subTarjeta);
   let titulo = document.createElement("h1");
   titulo.setAttribute("class", "st_titulo");
@@ -21,15 +27,6 @@ function mostrarForm(param) {
   explicacion.setAttribute("class", "st_texto");
   let formulario = document.createElement("form");
   subTarjeta_hija.appendChild(formulario);
-
-  let annadir = document.createElement("button");
-  annadir.setAttribute("id", "annadir");
-  annadir.setAttribute("onclick", "annadirProceso()");
-  annadir.innerHTML = "Añadir";
-  let lanzar = document.createElement("button");
-  lanzar.setAttribute("id", "lanzar");
-  lanzar.setAttribute("onclick", param + "()");
-  lanzar.innerHTML = "Lanzar";
 
   if (param == "metodoFIFO") {
     titulo.innerHTML = "FIFO";
@@ -49,7 +46,6 @@ function mostrarForm(param) {
   }
   subTarjeta.appendChild(titulo);
   subTarjeta.appendChild(explicacion);
-
   //cossas dek for
   for (let i = 0; i < num; ++i) {
     let dInput = document.createElement("div");
@@ -60,12 +56,13 @@ function mostrarForm(param) {
     inputTxt.setAttribute("type", "text");
     inputTxt.setAttribute("id", campos[i]);
     inputTxt.setAttribute("name", campos[i]);
+    
 
     dInput.appendChild(lbl);
     dInput.appendChild(inputTxt);
     formulario.appendChild(dInput);
   }
-
+  lanzar.setAttribute("onclick", param + "()");
   subTarjeta_hija.appendChild(annadir);
   subTarjeta_hija.appendChild(lanzar);
   subTarjeta.appendChild(subTarjeta_hija);
@@ -217,6 +214,7 @@ let contenedorGrafica = document.createElement("div");
 contenedorTabla.setAttribute("class", "contenedor");
 contenedorGrafica.setAttribute("class", "contenedor");
 
+
 let tabla = document.createElement("table");
 let grafica = document.createElement("table");
 tabla.setAttribute("class", "tabla");
@@ -292,16 +290,16 @@ function baseTablaDatos() {
     trProcc.appendChild(tdEspera);
 
     let tdPenalizacion = document.createElement("td");
-    tdPenalizacion.innerHTML = ((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion;
+    tdPenalizacion.innerHTML = Number.parseFloat(((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion).toFixed(2);
     promedioP = promedioP + (((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion);
     trProcc.appendChild(tdPenalizacion);
 
     tabla.appendChild(trProcc);
   }
-  promedioTE = (promedioTE / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
-  promedioTR = (promedioTR / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
-  promedioE = (promedioE / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
-  promedioP = (promedioP / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  promedioTE = Number.parseFloat(promedioTE / arrProcesos.length).toFixed(2);
+  promedioTR = Number.parseFloat(promedioTR / arrProcesos.length).toFixed(2);
+  promedioE = Number.parseFloat(promedioE / arrProcesos.length).toFixed(2);
+  promedioP = Number.parseFloat(promedioP / arrProcesos.length).toFixed(2);
   let promedios = document.createElement("ul");
   promedios.innerHTML = `<span><b>Promedios:</b></span><br> <li>Promedio t (T.Ejecucción) = ${promedioTE}</li><li>Promedio T(Tiempo respuesta) = ${promedioTR}</li><li>Promedio espera = ${promedioE}</li><li>Promedio penalización = ${promedioP}</li>`;
   contenedorTabla.appendChild(promedios);
@@ -341,7 +339,8 @@ function metodoSJF() {
   console.log(arrProcesos);
 
   bubleParaFIFOySJF();
-  
+  baseTablaDatos();
+
 }
 
 function metodoRoundRobin() {
@@ -352,7 +351,7 @@ function metodoRoundRobin() {
   nombrarProcesosEnGrafica();
   console.log(arrProcesos);
 }
-function bubleParaFIFOySJF(){
+function bubleParaFIFOySJF() {
   let i = 0;
   while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
