@@ -371,7 +371,8 @@ function metodoSJF() {
   let i = 0;
   let elegido = 0;
   let terminados = false;
-  while (terminados == false && i < arrProcesos.length) {
+  while (terminados == false && i <= arrProcesos.length) {
+
     let llegadaProcActual = arrProcesos[elegido].getLlegada;
     console.log(`I-> ${elegido} Momento -> ${momento}`);
     //console.log(arrProcesos);
@@ -412,8 +413,7 @@ function metodoSJF() {
     for (let l = 0; l < arrProcesos.length; ++l) {//si algun proceso está presente y dura menos que el anterior elegido, ese pasa a ser el elegido
       if (arrProcesos[l].terminado == false) {
         terminados = false;
-        console.log((arrProcesos[l].duracion < arrProcesos[elegido].duracion));
-        if ((arrProcesos[l].presente == true) && (arrProcesos[l].duracion < arrProcesos[elegido].duracion)) {
+        if (((arrProcesos[l].presente == true)&&(arrProcesos[l].terminado == false) )&& (arrProcesos[l].duracion < arrProcesos[elegido].duracion)) {
           elegido = l;
         }
       }
@@ -458,7 +458,7 @@ function establecerPresentes(col) {
 function pintarColumna(col, momento) {
   establecerPresentes(col);
   for (let k = 0; k < arrProcesos.length; ++k) {
-    console.log(`Momento -> ${momento}`);
+    //console.log(`Momento -> ${momento}`);
     let trPadre = document.getElementById(arrProcesos[k].id);
     let tdHijo = document.createElement("td");
 
