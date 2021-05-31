@@ -89,18 +89,20 @@ function establecerQtum(pram) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(id, llegada, duracion, presente, enEjecucion, terminado,tEspera) {
+  constructor(id, llegada, duracion, espera, inicio, fin, presente, enEjecucion, terminado) {
     //ints
     this.id = id;
     this.llegada = llegada;
     this.duracion = duracion;
-    this.tEspera=tEspera;
+    this.espera = espera;
+    this.inicio = inicio;
+    this.fin = fin;
     //Boleeans
     this.presente = presente;
     this.enEjecucion = enEjecucion;
     this.terminado = terminado;
   }
-  //SETTERS
+  //---SSETTERS
   set setId(valor) {
     this.id = valor;
   }
@@ -110,20 +112,27 @@ class Proceso {
   set setDuracion(valor) {
     this.llegada = valor;
   }
+  set setespera(valor) {
+    this.espera = valor;
+  }
+  set setInicio(valor) {
+    this.inicio = valor;
+  }
+  set setFin(valor) {
+    this.fin = valor;
+  }
+  //boleans
   set setPresente(valor) {
     this.presente = valor;
   }
   set setEnEjecucion(valor) {
     this.enEjecucion = valor;
   }
-
   set setTerminado(valor) {
     this.terminado = valor;
   }
-  set settEspera(valor){
-    this.tEspera =valor;
-  }
-  //GETTER
+
+  //---GETTERS
   get getId() {
     return this.id;
   }
@@ -133,6 +142,16 @@ class Proceso {
   get getDuracion() {
     return this.duracion;
   }
+  get getEspera() {
+    return this.espera;
+  }
+  get getInicio() {
+    return this.inicio;
+  }
+  get getFin() {
+    return this.fin;
+  }
+  //booleans
   get getPresente() {
     return this.duracion;
   }
@@ -142,9 +161,7 @@ class Proceso {
   get getTerminado() {
     return this.terminado;
   }
-  get getTEspera(){
-    return this.tEspera;
-  }
+
 }
 
 let arrProcesos = new Array();
@@ -154,8 +171,8 @@ function annadirProceso() {
   let duracion = parseInt(document.getElementById("Duracion").value);
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
-  //console.log(llegada);
-  let procc = new Proceso("", llegada, duracion, false, false, false,0);
+  //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
+  let procc = new Proceso("", llegada, duracion, 0, 0, 0, false, false, false);
   arrProcesos.push(procc);
   //console.log(procc);
 }
@@ -215,56 +232,85 @@ function asignarIdProcYtrs() {
     grafica.appendChild(tr);
   }
 }
-function nombrarProcesosEnGrafica(){
+function nombrarProcesosEnGrafica() {
   for (let k = 0; k < arrProcesos.length; ++k) {
     let trPadre = document.getElementById(arrProcesos[k].id);
     let tdHijo = document.createElement("td");
-    tdHijo.innerHTML=(arrProcesos[k].id);
-    tdHijo.setAttribute("class","td_texto")
+    tdHijo.innerHTML = arrProcesos[k].id;
+    tdHijo.setAttribute("class", "td_texto");
     trPadre.appendChild(tdHijo);
     grafica.appendChild(trPadre);
   }
-
 }
-function baseTablaDatos(){
-  let trTitulos= document.createElement("tr");
-  trTitulos.setAttribute("class","header_tabla");
-  trTitulos.innerHTML="<td>Proceso</td><td>Llegada</td><td>T.Ejecucición</td><td>T.Respuesta</td><td>T.Espera</td><td>Penalización</td>";
+function baseTablaDatos() {
+  let promedioTE = 0;
+  let promedioTR = 0;
+  let promedioE = 0;
+  let promedioP = 0;
+  let trTitulos = document.createElement("tr");
+  trTitulos.setAttribute("class", "header_tabla");
+  trTitulos.innerHTML =
+    "<td>Proceso</td> <td>Llegada</td> <td>t(T.Ejecución)</td> <td>Inicio</td>  <td>FIN</td>" +
+    "<td>T(T.Respuesta)</td> <td>T.Espera</td> <td>Penalización</td>";
   tabla.appendChild(trTitulos);
-  for(let i=0;i<arrProcesos.length;++i){
-    let trProcc=document.createElement("tr");
-    trProcc.setAttribute("id",("datos"+(arrProcesos[i]||{}).id));
-    if((i%2)==1){
-      trProcc.setAttribute("class","tr_par");
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    let trProcc = document.createElement("tr");
+    trProcc.setAttribute("id", "datos" + (arrProcesos[i] || {}).id);
+    if (i % 2 == 1) { //Para que sombree una fila sí una no
+      trProcc.setAttribute("class", "tr_par");
     }
-    let tdId= document.createElement("td");
-    tdId.innerHTML=(arrProcesos[i]||{}).id;
-    let tdLlegada= document.createElement("td");
-    tdLlegada.innerHTML=(arrProcesos[i]||{}).llegada;
-    let tdEjecucion=document.createElement("td");
-    tdEjecucion.innerHTML=(arrProcesos[i]||{}).duracion;
-    let tdTRespuesta =document.createElement("td");
-    tdTRespuesta.innerHTML="0";
-    let tdTEspera=document.createElement("td");
-    tdTEspera.innerHTML= (arrProcesos[i]||{}).tEspera;
-    let tdPenalizacion=document.createElement("td");
-    tdPenalizacion.innerHTML="0";
+    let tdId = document.createElement("td");
+    tdId.innerHTML = (arrProcesos[i] || {}).id;
     trProcc.appendChild(tdId);
+
+    let tdLlegada = document.createElement("td");
+    tdLlegada.innerHTML = (arrProcesos[i] || {}).llegada;
     trProcc.appendChild(tdLlegada);
+
+    let tdT = document.createElement("td");
+    tdT.innerHTML = (arrProcesos[i] || {}).duracion;
+    promedioTE = promedioTE + (arrProcesos[i] || {}).duracion;
+    trProcc.appendChild(tdT);
+
+    let tdInicio = document.createElement("td");
+    tdInicio.innerHTML = (arrProcesos[i] || {}).inicio;
+    trProcc.appendChild(tdInicio);
+
+    let tdFin = document.createElement("td");
+    tdFin.innerHTML = (arrProcesos[i] || {}).fin;
+    trProcc.appendChild(tdFin);
+    //-------T E P
+    let tdEjecucion = document.createElement("td");
+    tdEjecucion.innerHTML =
+      (arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera;
+    promedioTR = promedioTR + ((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera);
     trProcc.appendChild(tdEjecucion);
-    trProcc.appendChild(tdTRespuesta);
-    trProcc.appendChild(tdTEspera);
+
+    let tdEspera = document.createElement("td");
+    tdEspera.innerHTML = (arrProcesos[i] || {}).espera;
+    promedioE = promedioE + (arrProcesos[i] || {}).espera;
+    trProcc.appendChild(tdEspera);
+
+    let tdPenalizacion = document.createElement("td");
+    tdPenalizacion.innerHTML = ((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion;
+    promedioP = promedioP + (((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion);
     trProcc.appendChild(tdPenalizacion);
+
     tabla.appendChild(trProcc);
   }
-
+  promedioTE = (promedioTE / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  promedioTR = (promedioTR / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  promedioE = (promedioE / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  promedioP = (promedioP / arrProcesos.length).toLocaleString(undefined, { minimumFractionDigits: 2 });
+  let promedios = document.createElement("ul");
+  promedios.innerHTML = `<span><b>Promedios:</b></span><br> <li>Promedio t (T.Ejecucción) = ${promedioTE}</li><li>Promedio T(Tiempo respuesta) = ${promedioTR}</li><li>Promedio espera = ${promedioE}</li><li>Promedio penalización = ${promedioP}</li>`;
+  contenedorTabla.appendChild(promedios);
 
 }
 /*
  ********************| FIFO |********************
  */
-
-
+let momento = 0;
 function metodoFIFO() {
   subTarjeta_hija.innerHTML = "";
   subTarjeta_hija.appendChild(contenedorTabla);
@@ -274,27 +320,28 @@ function metodoFIFO() {
 
   asignarIdProcYtrs();
   nombrarProcesosEnGrafica();
-  
-  
+
   console.log(arrProcesos);
   let i = 0;
-  let momento = 0;
 
-  while (arrProcesos[arrProcesos.length - 1].terminado == false||i>arrProcesos.length) {
+
+  while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
     let llegadaProcActual = arrProcesos[i].getLlegada;
     console.log(`I-> ${i} Momento -> ${momento}`);
     //console.log(arrProcesos);
     let duracionExam = arrProcesos[i].duracion - 1;
+
     if (llegadaProcActual <= momento) {
       arrProcesos[i].enEjecucion = true;
       arrProcesos[i].presente = false;
-      let duracionBucle= (arrProcesos[i].duracion);
-      for (let j = 0; j <duracionBucle; ++j) {
-        
+      arrProcesos[i].inicio = momento;
+      let duracionBucle = arrProcesos[i].duracion;
+      for (let j = 0; j < duracionBucle; ++j) {
         pintarColumna(j, momento);
 
         if (j == duracionExam) {
           console.log(`Cambiar TERMINADO proceso: ${i} en momento ${momento}`);
+          arrProcesos[i].fin = momento + 1;
           arrProcesos[i].terminado = true;
           arrProcesos[i].enEjecucion = false;
           console.log(arrProcesos);
@@ -312,7 +359,7 @@ function metodoFIFO() {
         let trPadre = document.getElementById(arrProcesos[k].id);
         let tdHijo = document.createElement("td");
         console.log(tdHijo);
-          /*poner class ejecucion-> blanco*/
+        /*poner class ejecucion-> blanco*/
         tdHijo.setAttribute("class", "td_NoPresente");
         trPadre.appendChild(tdHijo);
       }
@@ -321,25 +368,47 @@ function metodoFIFO() {
   }
   baseTablaDatos();
 }
-function metodoSJF(){
 
+//Shortest Jod First
+function metodoSJF() {
+  subTarjeta_hija.innerHTML = "";
+  subTarjeta_hija.appendChild(contenedorTabla);
+  subTarjeta_hija.appendChild(contenedorGrafica);
+
+  arrProcesos.sort(compararLlegada);
+
+  asignarIdProcYtrs();
+  nombrarProcesosEnGrafica();
+  console.log(arrProcesos);
+
+  let i = 0;
+  let momento = 0;
+  while (arrProcesos[arrProcesos.length - 1].terminado == false || i > arrProcesos.length) {
+    //buscar presentes y comparar duración
+
+
+
+  }
 }
-function metodoRoundRobin(){
 
-}
+function metodoRoundRobin() { }
 
-function pintarColumna(col,momento){
-  for (let k = 0; k < arrProcesos.length; ++k) {
-    console.log(`Momento -> ${momento}`);
-
-    let llegadaExam = (arrProcesos[k]).llegada;
-    let terminadoSiNo = arrProcesos[k].terminado;
+function establecerPresentes(col) {
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    let llegadaExam = arrProcesos[i].llegada;
+    let terminadoSiNo = arrProcesos[i].terminado;
 
     if (llegadaExam == momento && terminadoSiNo == false) {
-      console.log(`----Cambiar a presente proceso: ${col} en momento ${momento}`);
-     (arrProcesos[k]||{}).presente=true;
-     console.log(arrProcesos[col]);
+      console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
+      (arrProcesos[i] || {}).presente = true;
+      console.log(arrProcesos[col]);
     }
+  }
+}
+function pintarColumna(col, momento) {
+  establecerPresentes(col);
+  for (let k = 0; k < arrProcesos.length; ++k) {
+    console.log(`Momento -> ${momento}`);
     let trPadre = document.getElementById(arrProcesos[k].id);
     let tdHijo = document.createElement("td");
 
@@ -347,12 +416,13 @@ function pintarColumna(col,momento){
       /*poner class ejecucion-> verde*/
       tdHijo.setAttribute("class", "td_enEjecucion");
     } else if (
-      (arrProcesos[k].enEjecucion == false &&
-      arrProcesos[k].presente == true) && arrProcesos[k].terminado==false
+      arrProcesos[k].enEjecucion == false &&
+      arrProcesos[k].presente == true &&
+      arrProcesos[k].terminado == false
     ) {
       /*poner class ejecucion-> gris*/
       tdHijo.setAttribute("class", "td_enEspera");
-      ++arrProcesos[k].tEspera;
+      ++arrProcesos[k].espera;
     } else {
       /*poner class ejecucion-> blanco*/
       tdHijo.setAttribute("class", "td_NoPresente");
