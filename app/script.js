@@ -56,7 +56,7 @@ function mostrarForm(param) {
     inputTxt.setAttribute("type", "text");
     inputTxt.setAttribute("id", campos[i]);
     inputTxt.setAttribute("name", campos[i]);
-    
+
 
     dInput.appendChild(lbl);
     dInput.appendChild(inputTxt);
@@ -368,10 +368,58 @@ function metodoSJF() {
   asignarIdProcYtrs();
   nombrarProcesosEnGrafica();
   console.log(arrProcesos);
+  let i = 0;
+  let elegido = 0;
+  let terminados = false;
+  while (terminados == false && i < arrProcesos.length) {
+    let llegadaProcActual = arrProcesos[elegido].getLlegada;
+    console.log(`I-> ${elegido} Momento -> ${momento}`);
+    //console.log(arrProcesos);
+    let duracionExam = arrProcesos[elegido].duracion - 1;
 
-  
-  baseTablaDatos();
+    if (llegadaProcActual <= momento) {
+      establecerEnejecucion(elegido);
+      let duracionBucle = arrProcesos[elegido].duracion;
 
+      for (let j = 0; j < duracionBucle; ++j) {
+
+        pintarColumna(j, momento);
+
+        if (j == duracionExam) {
+          establecerTerminado(elegido);
+          for (let n = 0; n < arrProcesos.length; ++n) {//poner como elegido el 1o que esté presente 
+            if (arrProcesos[n].presente == true) {
+              elegido = n;
+              n = arrProcesos.length;
+            }
+          }
+          ++i;
+        }
+        ++momento;
+      }
+    } else {
+      for (let k = 0; k < arrProcesos.length; ++k) {
+        let trPadre = document.getElementById(arrProcesos[k].id);
+        let tdHijo = document.createElement("td");
+        console.log(tdHijo);
+        /*poner class ejecucion-> blanco*/
+        tdHijo.setAttribute("class", "td_NoPresente");
+        trPadre.appendChild(tdHijo);
+      }
+      ++momento;
+    }
+    terminados = true;
+    for (let l = 0; l < arrProcesos.length; ++l) {//si algun proceso está presente y dura menos que el anterior elegido, ese pasa a ser el elegido
+      if (arrProcesos[l].terminado == false) {
+        terminados = false;
+        console.log((arrProcesos[l].duracion < arrProcesos[elegido].duracion));
+        if ((arrProcesos[l].presente == true) && (arrProcesos[l].duracion < arrProcesos[elegido].duracion)) {
+          elegido = l;
+        }
+      }
+    }
+  }
+  baseTablaDatos();//imprimir los datos de la tabla
 }
 
 function metodoRoundRobin() {
@@ -393,7 +441,7 @@ function establecerTerminado(i) {
   arrProcesos[i].fin = momento + 1;
   arrProcesos[i].terminado = true;
   arrProcesos[i].enEjecucion = false;
-  console.log(arrProcesos);
+  //console.log(arrProcesos);
 }
 function establecerPresentes(col) {
   for (let i = 0; i < arrProcesos.length; ++i) {
