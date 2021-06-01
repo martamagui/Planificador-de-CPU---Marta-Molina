@@ -18,16 +18,32 @@
     <!--Section-->
     <section id="section">
         <article class="section_tarjeta" id="tarjeta">
-            <h3 class="st_titulo">Lo primero que deberás hacer es seleccionar qué algoritmo te gustaría que organice la ejeccución de tus
-                procesos:</h3>
+            <h1 class="st_titulo">Planificador de CPU - MMA</h1>
+            <span class="prin">Los algoritmos de planificacción surgen por la necesidad de orden y eficiencia en la
+                ejecución de los mismos; en orden de economizar el uso de los recursos de los dispositivos electrónicos
+                que los ejecutan.</span><br>
+            <span class="prin">En este proyecto podrás visualizar el funcionamiento de algunos de los algoritmos que
+                sirven para la gestión de procesos.</span>
             <div id="subTarjeta" class="sub_tarjeta">
-                <div id="packFifo" class="pack"><button onclick="mostrarForm('metodoFIFO')">FIFO</button><span>El primer
-                        proceso en llegar, será el primero en ser atendido</span></div>
-                <div id="packSJF" class="pack"><button onclick="mostrarForm('metodoSJF')">SJF</button><span>El más corto será
-                        el primero en ser atendido.</span></div>
-                <div id="packRRobin" class="pack"><button onclick="mostrarForm('metodoRoundRobin')">Round
-                        Robin</button><span>Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado,
-                        pasa al siguiente.</span></div>
+                <div id="packFifo" class="pack">
+                    <button onclick="mostrarForm('metodoFIFO')" class="btn">
+                        <span class="btn_txt">FIFO</span>
+                    </button>
+                    <span class="st_texto">El primer proceso en llegar, será el primero en ser atendido</span>
+                </div>
+                <div id="packSJF" class="pack">
+                    <button onclick="mostrarForm('metodoSJF')" class="btn">
+                        <span class="btn_txt">SJF</span>
+                    </button>
+                    <span class="st_texto">El más corto será el primero en ser atendido.</span>
+                </div>
+                <div id="packRRobin" class="pack" class="btn">
+                    <button onclick="mostrarForm('metodoRoundRobin')" class="btn">
+                        <span class="btn_txt">Round Robin</span>
+                    </button>
+                    <span class="st_texto">Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado,
+                        pasa al siguiente.</span>
+                </div>
             </div>
         </article>
     </section>

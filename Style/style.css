@@ -36,7 +36,12 @@ body {
   justify-content: center;
   background-color: white;
 }
-
+.prin {
+  margin-left: 5vw;
+  margin-right: 5vw;
+  text-align: justify;
+  line-height: 4vh;
+}
 /****TARJETA***/
 .section_tarjeta {
   margin: 1.5vh;
@@ -80,7 +85,40 @@ body {
 .st_texto {
   text-align: center;
 }
-
+.btn {
+  align-self: center;
+  padding: 1.2vh;
+  width: 70%;
+  background-color: rgb(214, 23, 64);
+  color: #fff;
+  margin: 2vh;
+  border: none;
+  border-radius: 10px;
+}
+.btn:hover {
+  background-color: rgb(230, 38, 79);
+  box-shadow: 2px 4px 6px rgba(36, 36, 36, 0.2);
+}
+.btn_txt {
+  font-weight: 600;
+  font-size: 2vh;
+  letter-spacing: 0.15vh;
+}
+input {
+  margin: 1vh;
+  padding: 0.5vh;
+}
+.div_Llegada,
+.div_Duracion,
+.div_Qtum {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+label {
+  padding: 0.7vh;
+  align-self: center;
+}
 /*
 ***************************************************
 ********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********

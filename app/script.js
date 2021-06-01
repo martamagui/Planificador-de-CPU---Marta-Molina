@@ -8,10 +8,12 @@ subTarjeta.setAttribute("class", "sub_tarjeta en_columns");
 subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
 let annadir = document.createElement("button");
 annadir.setAttribute("id", "annadir");
+annadir.setAttribute("class", "btn");
 annadir.setAttribute("onclick", "annadirProceso()");
 annadir.innerHTML = "Añadir";
 let lanzar = document.createElement("button");
 lanzar.setAttribute("id", "lanzar");
+lanzar.setAttribute("class", "btn");
 lanzar.innerHTML = "Lanzar";
 let campos = ["Llegada", "Duracion", "Qtum"];
 //VACIAR Y PASAR A LOS CAMPOS DE TEXTO
@@ -35,12 +37,12 @@ function mostrarForm(param) {
     num = 2;
   } else if (param == "metodoSJF") {
     titulo.innerHTML = "SJF (Shortest Job First)";
-    explicacion.innerHTML = "El más corto será el primero en ser atendido.";
+    explicacion.innerHTML = "El proceso más corto será el primero en ser atendido.";
     num = 2;
   } else if (param == "metodoRoundRobin") {
     titulo.innerHTML = "Round Robin";
     explicacion.innerHTML =
-      "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente.";
+      "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente aunque el que está siendo ejecutado no haya terminado. Este volvería de nuevo a la cola de espera.";
     num = 3;
   } else {
   }
@@ -49,6 +51,7 @@ function mostrarForm(param) {
   //cossas dek for
   for (let i = 0; i < num; ++i) {
     let dInput = document.createElement("div");
+    dInput.setAttribute("class",("div_"+campos[i]));
     let lbl = document.createElement("label");
     let inputTxt = document.createElement("input");
     lbl.setAttribute("for", campos[i]);
@@ -371,10 +374,11 @@ function metodoSJF() {
   let i = 0;
   let elegido = 0;
   let terminados = false;
+  let excluidos= new Array();
   while (terminados == false && i <= arrProcesos.length) {
     console.log(`I-> ${elegido} Momento -> ${momento}`);
 
-    if (arrProcesos[elegido].getLlegada <= momento) {
+    if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido)==false) {
       establecerEnejecucion(elegido);
       establecerPresentes();
       for (let j = 0; j < arrProcesos[elegido].duracion; ++j) {
@@ -382,6 +386,7 @@ function metodoSJF() {
         ++momento;
       }
       establecerTerminado(elegido);
+      excluidos.push(elegido);
       establecerPresentes();
      
     } else {
@@ -394,6 +399,7 @@ function metodoSJF() {
         trPadre.appendChild(tdHijo);
       }
       ++momento;
+      establecerPresentes();
     }
     arrProcesos[elegido].enEjecucion = false;
     arrProcesos[elegido].presente = false;
@@ -412,10 +418,8 @@ function metodoSJF() {
             elegido = l;
           }
         }
-
       }
     }
-
   }
   baseTablaDatos();//imprimir los datos de la tabla
 }
