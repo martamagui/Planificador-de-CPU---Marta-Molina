@@ -372,32 +372,18 @@ function metodoSJF() {
   let elegido = 0;
   let terminados = false;
   while (terminados == false && i <= arrProcesos.length) {
-
-    let llegadaProcActual = arrProcesos[elegido].getLlegada;
     console.log(`I-> ${elegido} Momento -> ${momento}`);
-    //console.log(arrProcesos);
-    let duracionExam = arrProcesos[elegido].duracion - 1;
 
-    if (llegadaProcActual <= momento) {
+    if (arrProcesos[elegido].getLlegada <= momento) {
       establecerEnejecucion(elegido);
-      let duracionBucle = arrProcesos[elegido].duracion;
-
-      for (let j = 0; j < duracionBucle; ++j) {
-
+      establecerPresentes();
+      for (let j = 0; j < arrProcesos[elegido].duracion; ++j) {
         pintarColumna(j, momento);
-
-        if (j == duracionExam) {
-          establecerTerminado(elegido);
-          for (let n = 0; n < arrProcesos.length; ++n) {//poner como elegido el 1o que esté presente 
-            if (arrProcesos[n].presente == true) {
-              elegido = n;
-              n = arrProcesos.length;
-            }
-          }
-          ++i;
-        }
         ++momento;
       }
+      establecerTerminado(elegido);
+      establecerPresentes();
+     
     } else {
       for (let k = 0; k < arrProcesos.length; ++k) {
         let trPadre = document.getElementById(arrProcesos[k].id);
@@ -409,15 +395,27 @@ function metodoSJF() {
       }
       ++momento;
     }
+    arrProcesos[elegido].enEjecucion = false;
+    arrProcesos[elegido].presente = false;
+    for (let n = 0; n < arrProcesos.length; ++n) {//poner como elegido el 1o que esté presente 
+      if (arrProcesos[n].presente == true) {
+        elegido = n;
+        n = arrProcesos.length;
+      }
+    }
     terminados = true;
     for (let l = 0; l < arrProcesos.length; ++l) {//si algun proceso está presente y dura menos que el anterior elegido, ese pasa a ser el elegido
       if (arrProcesos[l].terminado == false) {
         terminados = false;
-        if (((arrProcesos[l].presente == true)&&(arrProcesos[l].terminado == false) )&& (arrProcesos[l].duracion < arrProcesos[elegido].duracion)) {
-          elegido = l;
+        if ((arrProcesos[l].duracion < arrProcesos[elegido].duracion)) {
+          if (arrProcesos[l].presente == true) {
+            elegido = l;
+          }
         }
+
       }
     }
+
   }
   baseTablaDatos();//imprimir los datos de la tabla
 }
@@ -443,20 +441,17 @@ function establecerTerminado(i) {
   arrProcesos[i].enEjecucion = false;
   //console.log(arrProcesos);
 }
-function establecerPresentes(col) {
+function establecerPresentes() {
   for (let i = 0; i < arrProcesos.length; ++i) {
-    let llegadaExam = arrProcesos[i].llegada;
-    let terminadoSiNo = arrProcesos[i].terminado;
-
-    if (llegadaExam == momento && terminadoSiNo == false) {
-      console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
+    if (arrProcesos[i].llegada == momento && arrProcesos[i].terminado == false) {
+      //console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
       (arrProcesos[i] || {}).presente = true;
-      console.log(arrProcesos[col]);
+      //console.log(arrProcesos[col]);
     }
   }
 }
-function pintarColumna(col, momento) {
-  establecerPresentes(col);
+function pintarColumna() {
+  establecerPresentes();
   for (let k = 0; k < arrProcesos.length; ++k) {
     //console.log(`Momento -> ${momento}`);
     let trPadre = document.getElementById(arrProcesos[k].id);
