@@ -385,14 +385,14 @@ function metodoSJF() {
 
     if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
       establecerEnejecucion(elegido);
-      establecerPresentes();
+      buscarPresentes();
       for (let j = 0; j < arrProcesos[elegido].duracion; ++j) {
         pintarColumna(j, momento);
         ++momento;
       }
       establecerTerminado(elegido);
       excluidos.push(elegido);
-      establecerPresentes();
+      buscarPresentes();
 
     } else {
       for (let k = 0; k < arrProcesos.length; ++k) {
@@ -404,7 +404,7 @@ function metodoSJF() {
         trPadre.appendChild(tdHijo);
       }
       ++momento;
-      establecerPresentes();
+      buscarPresentes();
     }
     arrProcesos[elegido].enEjecucion = false;
     arrProcesos[elegido].presente = false;
@@ -450,46 +450,74 @@ function metodoRoundRobin() {
 
   console.log(arrProcesos);
   console.log(duraciones);
+
   establecerEnejecucion(elegido);
-  while(elegido<3){
-    establecerEnejecucion(elegido);
-    let durBucle = (arrProcesos[elegido].duracion < qtum) ? arrProcesos[elegido].duracion : qtum;
+
+
+  while (excluidos.length < arrProcesos.length) {
+    for (let k = 0; k < arrProcesos.length; ++k) {
+      if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
+        establecerPausa(elegido);
+        elegido = k;
+        k = arrProcesos.length + 3;
+      }
+    }
+    if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
+      establecerEnejecucion(elegido);
+    let durBucle = (duraciones[elegido] < qtum) ? duraciones[elegido] : qtum;
     console.log(durBucle);
-    for(let j = 0; j<durBucle;++j){
+    for (let j = 0; j < durBucle; ++j) {
       pintarColumna();
       ++momento;
     }
-    establecerTerminado(elegido);
-    ++elegido;
+    //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
+    duraciones[elegido] = duraciones[elegido] - durBucle;
+    console.log(`%cDuración tras la resta ${duraciones[elegido]}`, "background-color: yellow");
+
+    if (duraciones[elegido] == 0) {
+      establecerTerminado(elegido);
+      excluidos.push(elegido);
+    }
+    buscarPresentes();
+      
+    } else {
+      for (let k = 0; k < arrProcesos.length; ++k) {
+        let trPadre = document.getElementById(arrProcesos[k].id);
+        let tdHijo = document.createElement("td");
+        console.log(tdHijo);
+        /*poner class ejecucion-> blanco*/
+        tdHijo.setAttribute("class", "td_NoPresente");
+        trPadre.appendChild(tdHijo);
+      }
+      ++momento;
+      buscarPresentes();
+    }
+
+    
   }
   
-  /*while (arrCopia.length!=0){
-    establecerPresentes();
-    //hacer un bucle que popee el que terminó su tiempo una posición para abajo si no terminó.
-    //Si sí terminó que lo elimine
-    if(arrProcesos[elegido].llegada <= momento && excluidos.includes(elegido)==false){
-      establecerEnejecucion(elegido);
-      let durBucle=(arrProcesos[elegido].llegada<qtum)? arrProcesos[elegido].llegada : qtum;
-
-    }
-    ++momento;
-  }*/
-
+  console.log(excluidos);
   baseTablaDatos();
 }
 
 
 
-
-
-
-
+function buscarPresentes() {
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    if (arrProcesos[i].llegada == momento && arrProcesos[i].terminado == false) {
+      //console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
+     (arrProcesos[i] || {}).presente = true;
+      //console.log(arrProcesos[col]);
+    }
+  }
+}
 
 function establecerEnejecucion(i) {
   arrProcesos[i].enEjecucion = true;
   arrProcesos[i].presente = false;
   arrProcesos[i].inicio = momento;
 }
+
 function establecerTerminado(i) {
   console.log(`Cambiar TERMINADO proceso: ${i} en momento ${momento}`);
   arrProcesos[i].fin = momento + 1;
@@ -497,18 +525,15 @@ function establecerTerminado(i) {
   arrProcesos[i].enEjecucion = false;
   //console.log(arrProcesos);
 }
-function establecerPresentes() {
-  for (let i = 0; i < arrProcesos.length; ++i) {
-    if (arrProcesos[i].llegada == momento && arrProcesos[i].terminado == false) {
-      //console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
-      (arrProcesos[i] || {}).presente = true;
-      //console.log(arrProcesos[col]);
-    }
-  }
+
+function establecerPausa(i) {
+  (arrProcesos[i] || {}).presente = true;
+  arrProcesos[i].enEjecucion = false;
 }
+
 function pintarColumna() {
 
-  establecerPresentes();
+  buscarPresentes();
   for (let k = 0; k < arrProcesos.length; ++k) {
     //console.log(`Momento -> ${momento}`);
     let trPadre = document.getElementById(arrProcesos[k].id);
