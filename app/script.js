@@ -9,7 +9,6 @@ subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
 let annadir = document.createElement("button");
 annadir.setAttribute("id", "annadir");
 annadir.setAttribute("class", "btn");
-annadir.setAttribute("onclick", "annadirProceso()");
 annadir.innerHTML = "Añadir";
 let lanzar = document.createElement("button");
 lanzar.setAttribute("id", "lanzar");
@@ -51,7 +50,7 @@ function mostrarForm(param) {
   //cossas dek for
   for (let i = 0; i < num; ++i) {
     let dInput = document.createElement("div");
-    dInput.setAttribute("class",("div_"+campos[i]));
+    dInput.setAttribute("class", ("div_" + campos[i]));
     let lbl = document.createElement("label");
     let inputTxt = document.createElement("input");
     lbl.setAttribute("for", campos[i]);
@@ -66,6 +65,7 @@ function mostrarForm(param) {
     formulario.appendChild(dInput);
   }
   lanzar.setAttribute("onclick", param + "()");
+  annadir.setAttribute("onclick", "annadirProceso( '" + param + "')");
   subTarjeta_hija.appendChild(annadir);
   subTarjeta_hija.appendChild(lanzar);
   subTarjeta.appendChild(subTarjeta_hija);
@@ -82,10 +82,7 @@ function mostrarForm(param) {
  ***********************************************
  */
 
-let qtum;
-function establecerQtum(pram) {
-  qtum = param;
-}
+
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
@@ -166,7 +163,7 @@ class Proceso {
 
 let arrProcesos = new Array();
 let Qtum;
-function annadirProceso() {
+function annadirProceso(param) {
   let llegada = parseInt(document.getElementById("Llegada").value);
   let duracion = parseInt(document.getElementById("Duracion").value);
   document.getElementById("Llegada").value = "";
@@ -174,7 +171,15 @@ function annadirProceso() {
   //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
   let procc = new Proceso("", llegada, duracion, 0, 0, 0, false, false, false);
   arrProcesos.push(procc);
+  if (param == 'metodoRoundRobin') {
+    establecerQtum()
+  }
   //console.log(procc);
+}
+let qtum;
+function establecerQtum() {
+  qtum = parseInt(document.getElementById("Qtum").value);
+  console.log(`Qtum:::: ${qtum}`)
 }
 //Ordenar Procesos por llegada
 function compararLlegada(a, b) {
@@ -374,11 +379,11 @@ function metodoSJF() {
   let i = 0;
   let elegido = 0;
   let terminados = false;
-  let excluidos= new Array();
+  let excluidos = new Array();
   while (terminados == false && i <= arrProcesos.length) {
     console.log(`I-> ${elegido} Momento -> ${momento}`);
 
-    if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido)==false) {
+    if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
       establecerEnejecucion(elegido);
       establecerPresentes();
       for (let j = 0; j < arrProcesos[elegido].duracion; ++j) {
@@ -388,7 +393,7 @@ function metodoSJF() {
       establecerTerminado(elegido);
       excluidos.push(elegido);
       establecerPresentes();
-     
+
     } else {
       for (let k = 0; k < arrProcesos.length; ++k) {
         let trPadre = document.getElementById(arrProcesos[k].id);
@@ -424,14 +429,50 @@ function metodoSJF() {
   baseTablaDatos();//imprimir los datos de la tabla
 }
 
+
+
+
+
+
 function metodoRoundRobin() {
   prepararPantallaTablas();
   arrProcesos.sort(compararLlegada);
 
   asignarIdProcYtrs();
   nombrarProcesosEnGrafica();
+
+  let elegido = 0;
+  let excluidos = new Array();
+  let duraciones = new Array();
+  for (let i = 0; i < arrProcesos.length; ++i) {
+    duraciones.push(arrProcesos[i].duracion);
+  }
   console.log(arrProcesos);
+  console.log(duraciones);
+  establecerEnejecucion(elegido);
+  let durBucle = (arrProcesos[elegido].duracion < qtum) ? arrProcesos[elegido].duracion : qtum;
+  console.log(durBucle);
+  /*while (arrCopia.length!=0){
+    establecerPresentes();
+    //hacer un bucle que popee el que terminó su tiempo una posición para abajo si no terminó.
+    //Si sí terminó que lo elimine
+    if(arrProcesos[elegido].llegada <= momento && excluidos.includes(elegido)==false){
+      establecerEnejecucion(elegido);
+      let durBucle=(arrProcesos[elegido].llegada<qtum)? arrProcesos[elegido].llegada : qtum;
+
+    }
+    ++momento;
+  }
+
+  baseTablaDatos();*/
 }
+
+
+
+
+
+
+
 
 function establecerEnejecucion(i) {
   arrProcesos[i].enEjecucion = true;

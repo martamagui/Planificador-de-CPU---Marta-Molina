@@ -52,6 +52,7 @@ body {
 }
 
 .sub_tarjeta {
+  box-sizing: border-box;
   margin-top: 4vh;
   margin-bottom: 4vh;
 }
@@ -134,6 +135,7 @@ label {
 
 /*datos*/
 .tabla {
+  box-sizing: border-box;
   margin-top: 2vh;
   margin-bottom: 4vh;
   width: auto;
@@ -161,21 +163,25 @@ li {
 
 /*representación gráfica*/
 .grafica {
+  box-sizing: border-box;
   width: auto; /*para que no de error, quitar luego*/
   margin-bottom: 4vh;
   margin-top: 4vh;
 }
+table{
+  box-sizing: border-box;
+}
 
 .td_enEjecucion {
-  padding: 2.2vh;
+  padding: 1vw;
   background-color: chartreuse;
 }
 .td_enEspera {
-  padding: 2.2vh;
+  padding: 1vw;
   background-color: lightslategray;
 }
 .td_NoPresente {
-  padding: 2.2vh;
+  padding: 1vw;
   background-color: whitesmoke;
 }
 .td_texto {
