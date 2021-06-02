@@ -447,11 +447,22 @@ function metodoRoundRobin() {
   for (let i = 0; i < arrProcesos.length; ++i) {
     duraciones.push(arrProcesos[i].duracion);
   }
+
   console.log(arrProcesos);
   console.log(duraciones);
   establecerEnejecucion(elegido);
-  let durBucle = (arrProcesos[elegido].duracion < qtum) ? arrProcesos[elegido].duracion : qtum;
-  console.log(durBucle);
+  while(elegido<3){
+    establecerEnejecucion(elegido);
+    let durBucle = (arrProcesos[elegido].duracion < qtum) ? arrProcesos[elegido].duracion : qtum;
+    console.log(durBucle);
+    for(let j = 0; j<durBucle;++j){
+      pintarColumna();
+      ++momento;
+    }
+    establecerTerminado(elegido);
+    ++elegido;
+  }
+  
   /*while (arrCopia.length!=0){
     establecerPresentes();
     //hacer un bucle que popee el que terminó su tiempo una posición para abajo si no terminó.
@@ -462,9 +473,9 @@ function metodoRoundRobin() {
 
     }
     ++momento;
-  }
+  }*/
 
-  baseTablaDatos();*/
+  baseTablaDatos();
 }
 
 
@@ -496,6 +507,7 @@ function establecerPresentes() {
   }
 }
 function pintarColumna() {
+
   establecerPresentes();
   for (let k = 0; k < arrProcesos.length; ++k) {
     //console.log(`Momento -> ${momento}`);
