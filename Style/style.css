@@ -192,18 +192,15 @@ table {
 }
 
 .td_enEjecucion {
-  padding: 0.5vw;
-
+  padding: 0.7vw;
   background-color: chartreuse;
 }
 .td_enEspera {
-  padding: 0.5vw;
-
+  padding: 0.7vw;
   background-color: lightslategray;
 }
 .td_NoPresente {
-  padding-left: 0.5vw;
-
+  padding: 0.7vw;
   background-color: whitesmoke;
 }
 .td_texto {

@@ -18,7 +18,7 @@ lanzar.setAttribute("class", "btn");
 lanzar.innerHTML = "Lanzar";
 
 let txtMensaje = document.createElement("span");
-txtMensaje.innerHTML="....";
+txtMensaje.innerHTML = "....";
 txtMensaje.setAttribute("class", "txt_oculto");
 
 
@@ -213,8 +213,8 @@ let arrProcesos = new Array();
 let arrPioridades = new Array();
 
 function annadirProceso(param) {
-  let llegada = parseInt((document.getElementById("Llegada").value) === "" ? 0 : (document.getElementById("Llegada").value));
-  let duracion = parseInt((document.getElementById("Duracion").value) === "" ? 0 : (document.getElementById("Duracion").value));
+  let llegada = parseInt((document.getElementById("Llegada").value) === "" ? 0 : parseInt(document.getElementById("Llegada").value));
+  let duracion = parseInt((document.getElementById("Duracion").value) === "" ? 0 : parseInt(document.getElementById("Duracion").value));
   if (duracion <= 0) {
     txtMensaje.setAttribute("class", "txt_error");
     txtMensaje.innerHTML = "La duración debe ser superior a 0.";
@@ -234,7 +234,7 @@ function annadirProceso(param) {
       establecerQtum();
       console.log(arrPioridades);
       if (param == 'metodoRoundRobinPrioridad') {
-        let prioridad = parseInt(document.getElementById("Prioridad").value) === "" ? 0 : (document.getElementById("Prioridad").value);
+        let prioridad = parseInt(document.getElementById("Prioridad").value) === "" ? 0 : parseInt(document.getElementById("Prioridad").value);
         procc = new Proceso("", llegada, duracion, prioridad, 0, 0, 0, false, false, false);
       } else {
         procc = new Proceso("", llegada, duracion, 0, 0, 0, 0, false, false, false);
@@ -252,11 +252,11 @@ let qtum; //quitar
 function establecerQtum() {
   let prioridad;
   if (document.getElementById("Prioridad") != null) {
-    prioridad = parseInt(document.getElementById("Prioridad").value) === "" ? 0 : (document.getElementById("Prioridad").value);
+    prioridad = parseInt(document.getElementById("Prioridad").value) === "" ? 0 : parseInt(document.getElementById("Prioridad").value);
   } else {
     prioridad = 0
   }
-  qtum = parseInt((document.getElementById("Qtum").value)=== "" ? 0 : (document.getElementById("Qtum").value));
+  qtum = parseInt((document.getElementById("Qtum").value) === "" ? 0 : parseInt(document.getElementById("Qtum").value));
   if (qtum == 0) {
     txtMensaje.innerHTML = "Qtum no puede ser 0."
     txtMensaje.setAttribute("class", "txt_error");
@@ -558,8 +558,18 @@ function metodoRoundRobin() {
   }
   //que se ponga el qtm de prioridad 0 si el array.length de 
   //prioridades es = 1
-  for (let i = 0; i < arrProcesos.length; ++i) {
-    duraciones.push(arrProcesos[i].duracion);
+
+  for (let p = 0; p < arrProcesos.length; ++p) {
+    if (isNaN(arrProcesos[p].duracion)) {
+      --p;
+    } else {
+      duraciones.push((arrProcesos[p]).duracion+1);
+    }
+  }
+  for (let p = 0; p < arrProcesos.length; ++p) {
+  
+      --duraciones[p];
+    
   }
 
   console.log(arrProcesos);
@@ -569,41 +579,50 @@ function metodoRoundRobin() {
 
 
   while (excluidos.length < arrProcesos.length) {
-    for (let k = 0; k < arrProcesos.length; ++k) {
-      if (arrPioridades.length == 1) {
-        if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
-          establecerPausa(elegido);
-          elegido = k;
-          k = arrProcesos.length + 3;
-        }
-      } else {
-        if ((arrProcesos[k].presente == true && k != elegido) && (excluidos.includes(k) == false) && (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad)) {
-          console.log("entra en la cond.")
-          establecerPausa(elegido);
-          elegido = k;
-          qtum = buscarPrioridad(arrPioridades[k].prioridad);
-          k = arrProcesos.length + 3;
-        }
-      }
 
-    }
     if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
       establecerEnejecucion(elegido);
-      let durBucle = (duraciones[elegido] < qtum) ? duraciones[elegido] : qtum;
-      console.log(durBucle);
+      let durBucle;
+      if (duraciones[elegido] < qtum) {
+        durBucle = parseInt(duraciones[elegido]);
+      } else {
+        durBucle = qtum;
+      }
       for (let j = 0; j < durBucle; ++j) {
         pintarColumna();
         ++momento;
       }
+      buscarPresentes();
       //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
       duraciones[elegido] = duraciones[elegido] - durBucle;
       console.log(`%cDuración tras la resta ${duraciones[elegido]}`, "background-color: yellow");
 
-      if (duraciones[elegido] == 0) {
+      if (duraciones[elegido] <= 0) {
         establecerTerminado(elegido);
         excluidos.push(elegido);
       }
-      buscarPresentes();
+
+      for (let k = 0; k < arrProcesos.length; ++k) {
+        //la afunción de con prioridad en lo unicoq ue debería diferenciarse de esta es en comparar el nivel de prioridad y establecer su qtum asociado.
+        if (arrPioridades.length == 1) {
+          if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
+            establecerPausa(elegido);
+            elegido = k;
+            k = arrProcesos.length + 3;
+          }
+        } else {
+          if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
+            if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
+              establecerPausa(elegido);
+              elegido = k;
+              let index = buscarPrioridad(arrPioridades[k].getPrioridad);
+              console.log("index obtenido" + index)
+              qtum = arrPioridades[index].qtum;
+            }
+          }
+        }
+      }
+      
 
     } else {
       pintarColumnaAusentes();
