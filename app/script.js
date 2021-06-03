@@ -267,7 +267,7 @@ function establecerQtum() {
 function buscarPrioridad(valor) {
   for (var i = 0; i < arrPioridades.length; i++) {
     if (arrPioridades[i].prioridad === valor) {
-      return i;
+      return i ;
     }
   }
 }
@@ -569,17 +569,11 @@ function metodoRoundRobin() {
           k = arrProcesos.length + 3;
         }
       } else {
-        if ((arrProcesos[k].presente == true && k != elegido) &&
-          (excluidos.includes(k) == false
-            && arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad)) {
+        if ((arrProcesos[k].presente == true && k != elegido) && (excluidos.includes(k) == false) && (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad)) {
+          console.log("entra en la cond.")
           establecerPausa(elegido);
           elegido = k;
-          for (let l = 0; l < arrPioridades.length; ++l) {
-            if (arrPioridades[l].prioridad == arrProcesos[k].prioridad) {
-              qtum = arrPioridades[l].qtum;
-              qtum=arrPioridades.length+3;
-            }
-          }
+          qtum = buscarPrioridad(arrPioridades[k].prioridad);
           k = arrProcesos.length + 3;
         }
       }
