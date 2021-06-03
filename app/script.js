@@ -6,14 +6,23 @@ let subTarjeta = document.createElement("div");
 let subTarjeta_hija = document.createElement("div");
 subTarjeta.setAttribute("class", "sub_tarjeta en_columns");
 subTarjeta_hija.setAttribute("class", "sub_tarjeta en_columns");
+
 let annadir = document.createElement("button");
 annadir.setAttribute("id", "annadir");
 annadir.setAttribute("class", "btn");
 annadir.innerHTML = "Añadir";
+
 let lanzar = document.createElement("button");
 lanzar.setAttribute("id", "lanzar");
 lanzar.setAttribute("class", "btn");
 lanzar.innerHTML = "Lanzar";
+
+let txtMensaje = document.createElement("span");
+txtMensaje.setAttribute("class", "txt_oculto");
+
+
+
+
 let campos = ["Llegada", "Duracion", "Qtum"];
 //VACIAR Y PASAR A LOS CAMPOS DE TEXTO
 function mostrarForm(param) {
@@ -64,8 +73,10 @@ function mostrarForm(param) {
     dInput.appendChild(inputTxt);
     formulario.appendChild(dInput);
   }
+
   lanzar.setAttribute("onclick", param + "()");
   annadir.setAttribute("onclick", "annadirProceso( '" + param + "')");
+  subTarjeta_hija.appendChild(txtMensaje);
   subTarjeta_hija.appendChild(annadir);
   subTarjeta_hija.appendChild(lanzar);
   subTarjeta.appendChild(subTarjeta_hija);
@@ -164,17 +175,25 @@ class Proceso {
 let arrProcesos = new Array();
 let Qtum;
 function annadirProceso(param) {
-  let llegada = parseInt(document.getElementById("Llegada").value);
-  let duracion = parseInt(document.getElementById("Duracion").value);
+  let llegada = parseInt((document.getElementById("Llegada").value) === "" ? 0 : (document.getElementById("Llegada").value));
+  let duracion = parseInt((document.getElementById("Duracion").value) === "" ? 0 : (document.getElementById("Duracion").value));
+  if (duracion <= 0) {
+    txtMensaje.setAttribute("class", "txt_error");
+    txtMensaje.innerHTML = "La duración debe ser superior a 0.";
+    //txtCorrecto.setAttribute("class", "txt_oculto");
+  } else {
+    txtMensaje.setAttribute("class", "txt_correcto");
+    txtMensaje.innerHTML = "Añadido.";
+    //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
+    let procc = new Proceso("", llegada, duracion, 0, 0, 0, false, false, false);
+    arrProcesos.push(procc);
+    if (param == 'metodoRoundRobin') {
+      establecerQtum()
+    }
+    //console.log(procc);
+  }
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
-  //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
-  let procc = new Proceso("", llegada, duracion, 0, 0, 0, false, false, false);
-  arrProcesos.push(procc);
-  if (param == 'metodoRoundRobin') {
-    establecerQtum()
-  }
-  //console.log(procc);
 }
 let qtum;
 function establecerQtum() {
@@ -464,22 +483,22 @@ function metodoRoundRobin() {
     }
     if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
       establecerEnejecucion(elegido);
-    let durBucle = (duraciones[elegido] < qtum) ? duraciones[elegido] : qtum;
-    console.log(durBucle);
-    for (let j = 0; j < durBucle; ++j) {
-      pintarColumna();
-      ++momento;
-    }
-    //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
-    duraciones[elegido] = duraciones[elegido] - durBucle;
-    console.log(`%cDuración tras la resta ${duraciones[elegido]}`, "background-color: yellow");
+      let durBucle = (duraciones[elegido] < qtum) ? duraciones[elegido] : qtum;
+      console.log(durBucle);
+      for (let j = 0; j < durBucle; ++j) {
+        pintarColumna();
+        ++momento;
+      }
+      //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
+      duraciones[elegido] = duraciones[elegido] - durBucle;
+      console.log(`%cDuración tras la resta ${duraciones[elegido]}`, "background-color: yellow");
 
-    if (duraciones[elegido] == 0) {
-      establecerTerminado(elegido);
-      excluidos.push(elegido);
-    }
-    buscarPresentes();
-      
+      if (duraciones[elegido] == 0) {
+        establecerTerminado(elegido);
+        excluidos.push(elegido);
+      }
+      buscarPresentes();
+
     } else {
       for (let k = 0; k < arrProcesos.length; ++k) {
         let trPadre = document.getElementById(arrProcesos[k].id);
@@ -493,9 +512,9 @@ function metodoRoundRobin() {
       buscarPresentes();
     }
 
-    
+
   }
-  
+
   console.log(excluidos);
   baseTablaDatos();
 }
@@ -506,7 +525,7 @@ function buscarPresentes() {
   for (let i = 0; i < arrProcesos.length; ++i) {
     if (arrProcesos[i].llegada == momento && arrProcesos[i].terminado == false) {
       //console.log(`Cambiar a presente proceso: ${col} en momento ${momento}`);
-     (arrProcesos[i] || {}).presente = true;
+      (arrProcesos[i] || {}).presente = true;
       //console.log(arrProcesos[col]);
     }
   }

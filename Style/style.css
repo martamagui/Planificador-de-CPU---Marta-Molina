@@ -120,6 +120,23 @@ label {
   padding: 0.7vh;
   align-self: center;
 }
+.txt_oculto{
+  margin-top: 1vh;
+  text-align: center;
+  color: rgb(225, 225, 225);
+}
+.txt_error{
+  margin-top: 1vh;
+  text-align: center;
+  color: rgb(214, 23, 64);
+  font-weight: 600;
+}
+.txt_correcto{
+  margin-top: 1vh;
+  text-align: center;
+  color: rgb(2, 126, 105);
+  font-weight: 600;
+}
 /*
 ***************************************************
 ********** +-+-+-+-+-+ +-+-+-+-+-+-+-+-+ **********
@@ -185,5 +202,23 @@ table{
   background-color: whitesmoke;
 }
 .td_texto {
-  font-size: 1.5 vh;
+  font-size: 1.5vh;
+}
+
+
+/* Media  queries */
+@media (max-width: 992px) {
+
+  #section {
+    width: 100%;
+  }
+  .sub_tarjeta{
+    display: flex;
+    flex-direction: column;
+  }
+  .btn_txt {
+    font-weight: 600;
+    font-size: 1.5vh;
+    letter-spacing: 0.15vh;
+  }
 }
