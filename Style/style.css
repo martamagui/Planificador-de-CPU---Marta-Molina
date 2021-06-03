@@ -124,6 +124,7 @@ label {
 .txt_oculto{
   margin-top: 1vh;
   text-align: center;
+  font-weight: 600;
   color: rgb(225, 225, 225);
 }
 .txt_error{
@@ -203,6 +204,7 @@ table{
   background-color: whitesmoke;
 }
 .td_texto {
+  
   font-size: 1.5vh;
 }
 
