@@ -18,6 +18,7 @@ lanzar.setAttribute("class", "btn");
 lanzar.innerHTML = "Lanzar";
 
 let txtMensaje = document.createElement("span");
+txtMensaje.innerHTML="....";
 txtMensaje.setAttribute("class", "txt_oculto");
 
 
@@ -48,12 +49,12 @@ function mostrarForm(param) {
     explicacion.innerHTML = "El proceso más corto será el primero en ser atendido.";
     num = 2;
   } else if (param == "metodoRoundRobin") {
-    titulo.innerHTML = "Round Robin";
+    titulo.innerHTML = "Round Robin (sin prioridad)";
     explicacion.innerHTML =
       "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente aunque el que está siendo ejecutado no haya terminado. Este volvería de nuevo a la cola de espera.";
     num = 3;
   } else if (param == "metodoRoundRobinPrioridad") {
-    titulo.innerHTML = "Round Robin";
+    titulo.innerHTML = "Round Robin (con prioridad)";
     explicacion.innerHTML =
       "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente aunque el que está siendo ejecutado no haya terminado. Este volvería de nuevo a la cola de espera.";
     num = 4;
@@ -79,10 +80,10 @@ function mostrarForm(param) {
     formulario.appendChild(dInput);
   }
 
-  
-  if(param== "metodoRoundRobinPrioridad"){
+
+  if (param == "metodoRoundRobinPrioridad") {
     lanzar.setAttribute("onclick", "metodoRoundRobin()");
-  }else{
+  } else {
     lanzar.setAttribute("onclick", param + "()");
   }
   annadir.setAttribute("onclick", "annadirProceso( '" + param + "')");
@@ -217,10 +218,16 @@ function annadirProceso(param) {
   if (duracion <= 0) {
     txtMensaje.setAttribute("class", "txt_error");
     txtMensaje.innerHTML = "La duración debe ser superior a 0.";
+    setTimeout(() => {
+      txtMensaje.setAttribute("class", "txt_oculto");
+    }, 1200);
     //txtCorrecto.setAttribute("class", "txt_oculto");
   } else {
     txtMensaje.setAttribute("class", "txt_correcto");
     txtMensaje.innerHTML = "Añadido.";
+    setTimeout(() => {
+      txtMensaje.setAttribute("class", "txt_oculto");
+    }, 1200);
     let procc;
     //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
     if (param == 'metodoRoundRobin' || param == 'metodoRoundRobinPrioridad') {
@@ -249,25 +256,32 @@ function establecerQtum() {
   } else {
     prioridad = 0
   }
-  qtum = parseInt(document.getElementById("Qtum").value);
-  if (arrPioridades.length != 0) {
-    let existe = buscarPrioridad(prioridad);
-    if (existe != null) {
-      arrPioridades[existe].qtum = qtum;
+  qtum = parseInt((document.getElementById("Qtum").value)=== "" ? 0 : (document.getElementById("Qtum").value));
+  if (qtum == 0) {
+    txtMensaje.innerHTML = "Qtum no puede ser 0."
+    txtMensaje.setAttribute("class", "txt_error");
+    setTimeout(() => {
+      txtMensaje.setAttribute("class", "txt_oculto");
+    }, 1200);
+  } else {
+    if (arrPioridades.length != 0) {
+      let existe = buscarPrioridad(prioridad);
+      if (existe != null) {
+        arrPioridades[existe].qtum = qtum;
+      } else {
+        let valores = new QtumYPridad(prioridad, qtum);
+        arrPioridades.push(valores);
+      }
     } else {
       let valores = new QtumYPridad(prioridad, qtum);
       arrPioridades.push(valores);
     }
-  } else {
-    let valores = new QtumYPridad(prioridad, qtum);
-    arrPioridades.push(valores);
   }
-
 }
 function buscarPrioridad(valor) {
   for (var i = 0; i < arrPioridades.length; i++) {
     if (arrPioridades[i].prioridad === valor) {
-      return i ;
+      return i;
     }
   }
 }
@@ -352,7 +366,7 @@ function nombrarProcesosEnGrafica() {
     grafica.appendChild(trPadre);
   }
 }
-function baseTablaDatos() {
+function baseTablaDatos(param) {
   let promedioTE = 0;
   let promedioTR = 0;
   let promedioE = 0;
@@ -362,6 +376,9 @@ function baseTablaDatos() {
   trTitulos.innerHTML =
     "<td>Proceso</td> <td>Llegada</td> <td>t(T.Ejecución)</td> <td>Inicio</td>  <td>FIN</td>" +
     "<td>T(T.Respuesta)</td> <td>T.Espera</td> <td>Penalización</td>";
+  if (param == 6) {
+    trTitulos.innerHTML += "<td>Prioridad</td>"
+  }
   tabla.appendChild(trTitulos);
   for (let i = 0; i < arrProcesos.length; ++i) {
     let trProcc = document.createElement("tr");
@@ -406,6 +423,11 @@ function baseTablaDatos() {
     promedioP = promedioP + (((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera) / (arrProcesos[i] || {}).duracion);
     trProcc.appendChild(tdPenalizacion);
 
+    if (param == 6) {
+      let tdPrioridad = document.createElement("td");
+      tdPrioridad.innerHTML = (arrProcesos[i] || {}).prioridad;
+      trProcc.appendChild(tdPrioridad);
+    }
     tabla.appendChild(trProcc);
   }
   promedioTE = Number.parseFloat(promedioTE / arrProcesos.length).toFixed(2);
@@ -460,7 +482,7 @@ function metodoFIFO() {
       ++momento;
     }
   }
-  baseTablaDatos();
+  baseTablaDatos(0);
 }
 
 //Shortest Jod First
@@ -516,7 +538,7 @@ function metodoSJF() {
       }
     }
   }
-  baseTablaDatos();//imprimir los datos de la tabla
+  baseTablaDatos(0);//imprimir los datos de la tabla
 }
 
 function metodoRoundRobin() {
@@ -591,7 +613,7 @@ function metodoRoundRobin() {
   }
 
   console.log(excluidos);
-  baseTablaDatos();
+  baseTablaDatos(6);
   let infoQtumYPrioridad = document.createElement("div");
   let textoinfo = "<br><span><b>Prioridades:</b></span><br><ul>";
   for (let dato of arrPioridades) {
@@ -657,7 +679,7 @@ function pintarColumna() {
     trPadre.appendChild(tdHijo);
   }
 }
-function pintarColumnaAusentes(){
+function pintarColumnaAusentes() {
   for (let k = 0; k < arrProcesos.length; ++k) {
     let trPadre = document.getElementById(arrProcesos[k].id);
     let tdHijo = document.createElement("td");

@@ -4,7 +4,7 @@
   margin: 0;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    font-size: 2vh;
+  font-size: 2vh;
 }
 /*nav*/
 body {
@@ -121,19 +121,19 @@ label {
   padding: 0.7vh;
   align-self: center;
 }
-.txt_oculto{
+.txt_oculto {
   margin-top: 1vh;
   text-align: center;
   font-weight: 600;
-  color: rgb(225, 225, 225);
+  color: rgb(255, 255, 255);
 }
-.txt_error{
+.txt_error {
   margin-top: 1vh;
   text-align: center;
   color: rgb(214, 23, 64);
   font-weight: 600;
 }
-.txt_correcto{
+.txt_correcto {
   margin-top: 1vh;
   text-align: center;
   color: rgb(2, 126, 105);
@@ -187,31 +187,38 @@ li {
   margin-bottom: 4vh;
   margin-top: 4vh;
 }
-table{
+table {
   box-sizing: border-box;
 }
 
 .td_enEjecucion {
-  padding: 1vw;
+  padding: 0.5vw;
+
   background-color: chartreuse;
 }
 .td_enEspera {
-  padding: 1vw;
+  padding: 0.5vw;
+
   background-color: lightslategray;
 }
 .td_NoPresente {
-  padding: 1vw;
+  padding-left: 0.5vw;
+
   background-color: whitesmoke;
 }
 .td_texto {
-  
   font-size: 1.5vh;
 }
 
-
 /* Media  queries */
+@media (max-width: 1550px) {
+  #section {
+    width: 95%;
+  }
+}
+
 @media (max-width: 992px) {
-  *{
+  * {
     font-size: 1.6vh;
   }
   .st_titulo {
@@ -220,7 +227,7 @@ table{
   #section {
     width: 100%;
   }
-  .sub_tarjeta{
+  .sub_tarjeta {
     display: flex;
     flex-direction: column;
   }
