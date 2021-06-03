@@ -23,7 +23,7 @@ txtMensaje.setAttribute("class", "txt_oculto");
 
 
 
-let campos = ["Llegada", "Duracion", "Qtum"];
+let campos = ["Llegada", "Duracion", "Qtum", "Prioridad"];
 //VACIAR Y PASAR A LOS CAMPOS DE TEXTO
 function mostrarForm(param) {
   console.log(param);
@@ -52,6 +52,11 @@ function mostrarForm(param) {
     explicacion.innerHTML =
       "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente aunque el que está siendo ejecutado no haya terminado. Este volvería de nuevo a la cola de espera.";
     num = 3;
+  } else if (param == "metodoRoundRobinPrioridad") {
+    titulo.innerHTML = "Round Robin";
+    explicacion.innerHTML =
+      "Se establece un intervalo de tiempo a cada proceso. Una vez este es agotado, pasa al siguiente aunque el que está siendo ejecutado no haya terminado. Este volvería de nuevo a la cola de espera.";
+    num = 4;
   } else {
   }
   subTarjeta.appendChild(titulo);
@@ -97,11 +102,12 @@ function mostrarForm(param) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(id, llegada, duracion, espera, inicio, fin, presente, enEjecucion, terminado) {
+  constructor(id, llegada, duracion, prioridad, espera, inicio, fin, presente, enEjecucion, terminado) {
     //ints
     this.id = id;
     this.llegada = llegada;
     this.duracion = duracion;
+    this.prioridad = prioridad;
     this.espera = espera;
     this.inicio = inicio;
     this.fin = fin;
@@ -119,6 +125,9 @@ class Proceso {
   }
   set setDuracion(valor) {
     this.llegada = valor;
+  }
+  set setprioridad(valor) {
+    this.prioridad = valor;
   }
   set setespera(valor) {
     this.espera = valor;
@@ -150,6 +159,9 @@ class Proceso {
   get getDuracion() {
     return this.duracion;
   }
+  get getPrioridad() {
+    return this.prioridad;
+  }
   get getEspera() {
     return this.espera;
   }
@@ -171,9 +183,29 @@ class Proceso {
   }
 
 }
-
+class QtumYPridad {
+  constructor(prioridad, qtum) {
+    this.prioridad = prioridad;
+    this.qtum = qtum;
+  }
+  //Setters
+  set setPrioridad(valor) {
+    this.prioridad = valor;
+  }
+  set setQtum(valor) {
+    this.qtum = valor;
+  }
+  //GETTERS
+  get getPrioridad() {
+    return this.prioridad;
+  }
+  get getQtum() {
+    return this.qtum;
+  }
+}
 let arrProcesos = new Array();
-let Qtum;
+let arrPioridades = new Array();
+
 function annadirProceso(param) {
   let llegada = parseInt((document.getElementById("Llegada").value) === "" ? 0 : (document.getElementById("Llegada").value));
   let duracion = parseInt((document.getElementById("Duracion").value) === "" ? 0 : (document.getElementById("Duracion").value));
@@ -184,22 +216,57 @@ function annadirProceso(param) {
   } else {
     txtMensaje.setAttribute("class", "txt_correcto");
     txtMensaje.innerHTML = "Añadido.";
+    let procc;
     //console.log(llegada);   id,llegada,duracion,espera, inicio,fin, presente, enEjecucion,terminado
-    let procc = new Proceso("", llegada, duracion, 0, 0, 0, false, false, false);
-    arrProcesos.push(procc);
-    if (param == 'metodoRoundRobin') {
-      establecerQtum()
+    if (param == 'metodoRoundRobin' || param == 'metodoRoundRobinPrioridad') {
+      establecerQtum();
+      console.log(arrPioridades);
+      if (param == 'metodoRoundRobinPrioridad') {
+        let prioridad = parseInt(document.getElementById("Prioridad").value) === "" ? 0 : (document.getElementById("Prioridad").value);
+       procc = new Proceso("", llegada, duracion, prioridad, 0, 0, 0, false, false, false);
+      } else {
+        procc = new Proceso("", llegada, duracion, 0, 0, 0, 0, false, false, false);
+      }
+    }else{
+      procc = new Proceso("", llegada, duracion, 0, 0, 0, 0, false, false, false);
     }
-    //console.log(procc);
+    console.log(procc);
+    arrProcesos.push(procc);
   }
   document.getElementById("Llegada").value = "";
   document.getElementById("Duracion").value = "";
 }
-let qtum;
+let qtum; //quitar
 function establecerQtum() {
+  let prioridad;
+  if(document.getElementById("Prioridad")!=null){
+   prioridad= parseInt(document.getElementById("Prioridad").value) === "" ? 0 : (document.getElementById("Prioridad").value);
+  }else{
+    prioridad=0
+  }
   qtum = parseInt(document.getElementById("Qtum").value);
-  console.log(`Qtum:::: ${qtum}`)
+  if (arrPioridades.length != 0) {
+    let existe = buscarPrioridad(prioridad);
+    if (existe != null) {
+      arrPioridades[existe].qtum = qtum;
+    } else {
+      let valores = new QtumYPridad(prioridad, qtum);
+      arrPioridades.push(valores);
+    }
+  } else {
+    let valores = new QtumYPridad(prioridad, qtum);
+    arrPioridades.push(valores);
+  }
+
 }
+function buscarPrioridad(valor) {
+  for (var i = 0; i < arrPioridades.length; i++) {
+    if (arrPioridades[i].prioridad === valor) {
+      return i;
+    }
+  }
+}
+
 //Ordenar Procesos por llegada
 function compararLlegada(a, b) {
   const itemA = a.llegada;
@@ -449,10 +516,6 @@ function metodoSJF() {
 }
 
 
-
-
-
-
 function metodoRoundRobin() {
   prepararPantallaTablas();
   arrProcesos.sort(compararLlegada);
@@ -463,6 +526,9 @@ function metodoRoundRobin() {
   let elegido = 0;
   let excluidos = new Array();
   let duraciones = new Array();
+  let qtum;
+  //que se ponga el qtm de prioridad 0 si el array.length de 
+  //prioridades es = 1
   for (let i = 0; i < arrProcesos.length; ++i) {
     duraciones.push(arrProcesos[i].duracion);
   }
