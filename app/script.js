@@ -456,14 +456,7 @@ function metodoFIFO() {
         ++momento;
       }
     } else {
-      for (let k = 0; k < arrProcesos.length; ++k) {
-        let trPadre = document.getElementById(arrProcesos[k].id);
-        let tdHijo = document.createElement("td");
-        console.log(tdHijo);
-        /*poner class ejecucion-> blanco*/
-        tdHijo.setAttribute("class", "td_NoPresente");
-        trPadre.appendChild(tdHijo);
-      }
+      pintarColumnaAusentes();
       ++momento;
     }
   }
@@ -499,14 +492,7 @@ function metodoSJF() {
       buscarPresentes();
 
     } else {
-      for (let k = 0; k < arrProcesos.length; ++k) {
-        let trPadre = document.getElementById(arrProcesos[k].id);
-        let tdHijo = document.createElement("td");
-        console.log(tdHijo);
-        /*poner class ejecucion-> blanco*/
-        tdHijo.setAttribute("class", "td_NoPresente");
-        trPadre.appendChild(tdHijo);
-      }
+      pintarColumnaAusentes();
       ++momento;
       buscarPresentes();
     }
@@ -598,19 +584,10 @@ function metodoRoundRobin() {
       buscarPresentes();
 
     } else {
-      for (let k = 0; k < arrProcesos.length; ++k) {
-        let trPadre = document.getElementById(arrProcesos[k].id);
-        let tdHijo = document.createElement("td");
-        console.log(tdHijo);
-        /*poner class ejecucion-> blanco*/
-        tdHijo.setAttribute("class", "td_NoPresente");
-        trPadre.appendChild(tdHijo);
-      }
+      pintarColumnaAusentes();
       ++momento;
       buscarPresentes();
     }
-
-
   }
 
   console.log(excluidos);
@@ -677,6 +654,16 @@ function pintarColumna() {
       /*poner class ejecucion-> blanco*/
       tdHijo.setAttribute("class", "td_NoPresente");
     }
+    trPadre.appendChild(tdHijo);
+  }
+}
+function pintarColumnaAusentes(){
+  for (let k = 0; k < arrProcesos.length; ++k) {
+    let trPadre = document.getElementById(arrProcesos[k].id);
+    let tdHijo = document.createElement("td");
+    console.log(tdHijo);
+    /*poner class ejecucion-> blanco*/
+    tdHijo.setAttribute("class", "td_NoPresente");
     trPadre.appendChild(tdHijo);
   }
 }
