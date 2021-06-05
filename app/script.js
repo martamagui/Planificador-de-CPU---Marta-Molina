@@ -81,7 +81,7 @@ function mostrarForm(param) {
   }
 
   lanzar.setAttribute("onclick", param + "()");
-  
+
   annadir.setAttribute("onclick", "annadirProceso( '" + param + "')");
   subTarjeta_hija.appendChild(txtMensaje);
   subTarjeta_hija.appendChild(annadir);
@@ -104,11 +104,12 @@ function mostrarForm(param) {
 
 //CREAR UN OBJETO CON CADA PROCESO INTRODUCIDO
 class Proceso {
-  constructor(id, llegada, duracion, prioridad, espera, inicio, fin, presente, enEjecucion, terminado) {
+  constructor(id, llegada, duracion, restaDuracion, prioridad, espera, inicio, fin, presente, enEjecucion, terminado) {
     //ints
     this.id = id;
     this.llegada = llegada;
     this.duracion = duracion;
+    this.restaDuracion = restaDuracion;
     this.prioridad = prioridad;
     this.espera = espera;
     this.inicio = inicio;
@@ -127,6 +128,9 @@ class Proceso {
   }
   set setDuracion(valor) {
     this.llegada = valor;
+  }
+  set setrestaDuracion(valor) {
+    this.restaDuracion = valor;
   }
   set setprioridad(valor) {
     this.prioridad = valor;
@@ -160,6 +164,9 @@ class Proceso {
   }
   get getDuracion() {
     return this.duracion;
+  }
+  get getRestaDuracion() {
+    return this.restaDuracion;
   }
   get getPrioridad() {
     return this.prioridad;
@@ -211,6 +218,7 @@ let arrPioridades = new Array();
 function annadirProceso(param) {
   let llegada = parseInt(((document.getElementById("Llegada").value).trim()) === "" ? 0 : parseInt((document.getElementById("Llegada").value).trim()));
   let duracion = parseInt(((document.getElementById("Duracion").value).trim()) === "" ? 0 : parseInt((document.getElementById("Duracion").value).trim()));
+  let duracionD = duracion;
   if (duracion <= 0) {
     txtMensaje.setAttribute("class", "txt_error");
     txtMensaje.innerHTML = "La duración debe ser superior a 0.";
@@ -230,13 +238,13 @@ function annadirProceso(param) {
       establecerQtum();
       console.log(arrPioridades);
       if (param == 'metodoRoundRobinPrioridad') {
-        let prioridad = parseInt((document.getElementById("Prioridad").value).trim())=== "" ? 0 : parseInt((document.getElementById("Prioridad").value).trim());
-        procc = new Proceso("", llegada, duracion, prioridad, 0, 0, 0, false, false, false);
+        let prioridad = parseInt((document.getElementById("Prioridad").value).trim()) === "" ? 0 : parseInt((document.getElementById("Prioridad").value).trim());
+        procc = new Proceso("", llegada, duracion, duracionD, prioridad, 0, 0, 0, false, false, false);
       } else {
-        procc = new Proceso("", llegada, duracion, 0, 0, 0, 0, false, false, false);
+        procc = new Proceso("", llegada, duracion, duracionD, 0, 0, 0, 0, false, false, false);
       }
     } else {
-      procc = new Proceso("", llegada, duracion, 0, 0, 0, 0, false, false, false);
+      procc = new Proceso("", llegada, duracion, duracionD, 0, 0, 0, 0, false, false, false);
     }
     console.log(procc);
     arrProcesos.push(procc);
@@ -564,13 +572,13 @@ function metodoRoundRobin() {
     if (isNaN(arrProcesos[p].duracion)) {
       --p;
     } else {
-      duraciones.push((arrProcesos[p]).duracion+1);
+      duraciones.push((arrProcesos[p]).duracion + 1);
     }
   }
   for (let p = 0; p < arrProcesos.length; ++p) {
-  
-      --duraciones[p];
-    
+
+    --duraciones[p];
+
   }
 
   console.log(arrProcesos);
@@ -623,7 +631,7 @@ function metodoRoundRobin() {
           }
         }
       }
-      
+
 
     } else {
       pintarColumnaAusentes();
@@ -653,30 +661,16 @@ function metodoRoundRobinPrioridad() {
 
   let elegido = 0;
   let excluidos = new Array();
-  let duraciones = new Array();
-  let qtum;
+  let qtum = 0;
   if (arrPioridades.length == 1) {
     qtum = arrPioridades[0].qtum;
   }
   //que se ponga el qtm de prioridad 0 si el array.length de 
   //prioridades es = 1
 
-  for (let p = 0; p < arrProcesos.length; ++p) {
-    if (isNaN(arrProcesos[p].duracion)) {
-      --p;
-    } else {
-      duraciones.push((arrProcesos[p]).duracion+1);
-    }
-  }
-  for (let p = 0; p < arrProcesos.length; ++p) {
-  
-      --duraciones[p];
-    
-  }
+
 
   console.log(arrProcesos);
-  console.log(duraciones);
-
   establecerEnejecucion(elegido);
 
 
@@ -684,47 +678,41 @@ function metodoRoundRobinPrioridad() {
 
     if (arrProcesos[elegido].getLlegada <= momento && excluidos.includes(elegido) == false) {
       establecerEnejecucion(elegido);
-      let durBucle;
-      if (duraciones[elegido] < qtum) {
-        durBucle = parseInt(duraciones[elegido]);
+      let durBucle = 0;
+      let qtum = (arrPioridades[(buscarPrioridad(arrProcesos[elegido].prioridad))].qtum);
+      console.log(arrProcesos[elegido].restaDuracion);
+      if (arrProcesos[elegido].restaDuracion < qtum) {
+        durBucle = arrProcesos[elegido].restaDuracion;
       } else {
         durBucle = qtum;
       }
+      console.log(`%cDuración tras la resta ${durBucle}`, "background-color: yellow");
       for (let j = 0; j < durBucle; ++j) {
         pintarColumna();
         ++momento;
       }
       buscarPresentes();
       //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
-      duraciones[elegido] = duraciones[elegido] - durBucle;
-      console.log(`%cDuración tras la resta ${duraciones[elegido]}`, "background-color: yellow");
+      arrProcesos[elegido].restaDuracion -= durBucle;
+      console.log(`%cDuración tras la resta ${arrProcesos[elegido].restaDuracion}`, "background-color: yellow");
 
-      if (duraciones[elegido] <= 0) {
+      if (arrProcesos[elegido].restaDuracion <= 0) {
         establecerTerminado(elegido);
         excluidos.push(elegido);
       }
 
       for (let k = 0; k < arrProcesos.length; ++k) {
-        //la afunción de con prioridad en lo unicoq ue debería diferenciarse de esta es en comparar el nivel de prioridad y establecer su qtum asociado.
-        if (arrPioridades.length == 1) {
-          if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
+        if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
+          if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
             establecerPausa(elegido);
             elegido = k;
-            k = arrProcesos.length + 3;
-          }
-        } else {
-          if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
-            if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
-              establecerPausa(elegido);
-              elegido = k;
-              let index = buscarPrioridad(arrPioridades[k].getPrioridad);
-              console.log("index obtenido" + index)
-              qtum = arrPioridades[index].qtum;
-            }
+            let index = buscarPrioridad(arrProcesos[k].prioridad);
+            console.log("index obtenido" + index)
+            qtum = arrPioridades[index].qtum;
           }
         }
       }
-      
+
 
     } else {
       pintarColumnaAusentes();
