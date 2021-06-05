@@ -686,7 +686,7 @@ function metodoRoundRobinPrioridad() {
       } else {
         durBucle = qtum;
       }
-      console.log(`%cDuración tras la resta ${durBucle}`, "background-color: yellow");
+      console.log(`%cDuración BUCLE ${durBucle}`, "background-color: red");
       for (let j = 0; j < durBucle; ++j) {
         pintarColumna();
         ++momento;
@@ -695,29 +695,27 @@ function metodoRoundRobinPrioridad() {
       //console.log(`%cDuración antes de la resta ${duraciones[elegido]}`, "background-color: yellow");
       arrProcesos[elegido].restaDuracion -= durBucle;
       console.log(`%cDuración tras la resta ${arrProcesos[elegido].restaDuracion}`, "background-color: yellow");
-
       if (arrProcesos[elegido].restaDuracion <= 0) {
         establecerTerminado(elegido);
         excluidos.push(elegido);
       }
-
-      for (let k = 0; k < arrProcesos.length; ++k) {
-        if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
-          if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
-            establecerPausa(elegido);
-            elegido = k;
-            let index = buscarPrioridad(arrProcesos[k].prioridad);
-            console.log("index obtenido" + index)
-            qtum = arrPioridades[index].qtum;
-          }
-        }
-      }
-
-
     } else {
       pintarColumnaAusentes();
       ++momento;
       buscarPresentes();
+    }
+    let antiguoElegido= elegido;
+    for (let k = 0; k < arrProcesos.length; ++k) {
+      if (arrProcesos[k].presente == true && excluidos.includes(k) == false && k!= antiguoElegido) {
+        if (arrProcesos[k].prioridad >= arrProcesos[antiguoElegido].prioridad || excluidos.includes(elegido)) {
+          establecerPausa(elegido);
+          elegido = k;
+          let index = buscarPrioridad(arrProcesos[k].prioridad);
+          console.log("index obtenido" + index)
+          qtum = arrPioridades[index].qtum;
+          //k= arrProcesos.length;
+        }
+      }
     }
   }
 
