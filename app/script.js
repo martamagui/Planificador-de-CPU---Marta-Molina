@@ -730,7 +730,9 @@ function metodoRoundRobinPrioridad() {
   infoQtumYPrioridad.innerHTML = textoinfo;
   contenedorTabla.appendChild(infoQtumYPrioridad);
 }
-
+/*
+ ********************| Funciones recurrentes |********************
+ */
 function buscarPresentes() {
   for (let i = 0; i < arrProcesos.length; ++i) {
     if (arrProcesos[i].llegada == momento && arrProcesos[i].terminado == false) {
