@@ -30,6 +30,7 @@ body {
 /*section*/
 #section {
   height: 100%;
+  min-height: 98vh;
   width: 80%;
   align-self: center;
   display: flex;
@@ -84,6 +85,8 @@ body {
 }
 .st_texto {
   text-align: center;
+  width: 80%;
+  align-self: center;
   margin: 2vw;
 }
 .btn {
