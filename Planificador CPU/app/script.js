@@ -665,11 +665,8 @@ function metodoRoundRobinPrioridad() {
   //que se ponga el qtm de prioridad 0 si el array.length de 
   //prioridades es = 1
 
-
-
   console.log(arrProcesos);
   establecerEnejecucion(elegido);
-
 
   while (excluidos.length < arrProcesos.length) {
 
