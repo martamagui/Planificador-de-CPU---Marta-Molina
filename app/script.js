@@ -411,11 +411,11 @@ function baseTablaDatos(param) {
     tdFin.innerHTML = (arrProcesos[i] || {}).fin;
     trProcc.appendChild(tdFin);
     //-------T E P
-    let tdEjecucion = document.createElement("td");
-    tdEjecucion.innerHTML =
-      (arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera;
+    let tdRespuesta = document.createElement("td");
+    tdRespuesta.innerHTML =
+    (arrProcesos[i] || {}).fin - (arrProcesos[i] || {}).llegada;
     promedioTR = promedioTR + ((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera);
-    trProcc.appendChild(tdEjecucion);
+    trProcc.appendChild(tdRespuesta);
 
     let tdEspera = document.createElement("td");
     tdEspera.innerHTML = (arrProcesos[i] || {}).espera;
