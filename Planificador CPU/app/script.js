@@ -56,7 +56,7 @@ function mostrarForm(param) {
   } else if (param == "metodoRoundRobinPrioridad") {
     titulo.innerHTML = "Round Robin (con prioridad)";
     explicacion.innerHTML =
-      "Se establece un nivel de prioridad a cada proceso. Esta prioridad tiene asociado un quantum. Una vez este es agotado el periodo, pasa al siguiente proceso con una prioridad igual o superior, si no lo hay, baja un nivel de prioridad.";
+      "Se establece un nivel de prioridad a cada proceso. Esta prioridad tiene asociado un quantum. Una vez este es agotado, pasa al siguiente proceso con una prioridad igual o superior, si no lo hay, baja un nivel de prioridad. <br><br>(Si se vuelve a escribir una prioridad ya introducida en otro proceso con un número distinto, esta será actualizada)";
     num = 4;
   } else {
   }
