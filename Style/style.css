@@ -8,7 +8,6 @@
 }
 /*nav*/
 body {
-  height: 100vh;
   width: 100vw;
   background-color: rgb(225, 225, 225);
   display: flex;
@@ -46,7 +45,6 @@ body {
 /****TARJETA***/
 .section_tarjeta {
   margin: 1.5vh;
-  border-radius: 2.5vh;
   display: flex;
   flex-direction: column;
   align-content: flex-start;
@@ -86,6 +84,7 @@ body {
 }
 .st_texto {
   text-align: center;
+  margin: 2vw;
 }
 .btn {
   align-self: center;
