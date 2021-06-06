@@ -414,7 +414,7 @@ function baseTablaDatos(param) {
     let tdRespuesta = document.createElement("td");
     tdRespuesta.innerHTML =
     (arrProcesos[i] || {}).fin - (arrProcesos[i] || {}).llegada;
-    promedioTR = promedioTR + ((arrProcesos[i] || {}).duracion + (arrProcesos[i] || {}).espera);
+    promedioTR = promedioTR + ((arrProcesos[i] || {}).fin - (arrProcesos[i] || {}).llegada);
     trProcc.appendChild(tdRespuesta);
 
     let tdEspera = document.createElement("td");
