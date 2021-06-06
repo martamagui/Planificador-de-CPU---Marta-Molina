@@ -610,33 +610,30 @@ function metodoRoundRobin() {
         establecerTerminado(elegido);
         excluidos.push(elegido);
       }
-
-      for (let k = 0; k < arrProcesos.length; ++k) {
-        //la afunción de con prioridad en lo unicoq ue debería diferenciarse de esta es en comparar el nivel de prioridad y establecer su qtum asociado.
-        if (arrPioridades.length == 1) {
-          if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
-            establecerPausa(elegido);
-            elegido = k;
-            k = arrProcesos.length + 3;
-          }
-        } else {
-          if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
-            if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
-              establecerPausa(elegido);
-              elegido = k;
-              let index = buscarPrioridad(arrPioridades[k].getPrioridad);
-              console.log("index obtenido" + index)
-              qtum = arrPioridades[index].qtum;
-            }
-          }
-        }
-      }
-
-
     } else {
       pintarColumnaAusentes();
       ++momento;
       buscarPresentes();
+    }
+    for (let k = 0; k < arrProcesos.length; ++k) {
+      //la afunción de con prioridad en lo unicoq ue debería diferenciarse de esta es en comparar el nivel de prioridad y establecer su qtum asociado.
+      if (arrPioridades.length == 1) {
+        if ((arrProcesos[k].presente == true && k != elegido) && excluidos.includes(k) == false) {
+          establecerPausa(elegido);
+          elegido = k;
+          k = arrProcesos.length + 3;
+        }
+      } else {
+        if (arrProcesos[k].presente == true && excluidos.includes(k) == false) {
+          if (arrProcesos[k].prioridad >= arrProcesos[elegido].prioridad || excluidos.includes(elegido)) {
+            establecerPausa(elegido);
+            elegido = k;
+            let index = buscarPrioridad(arrPioridades[k].getPrioridad);
+            console.log("index obtenido" + index)
+            qtum = arrPioridades[index].qtum;
+          }
+        }
+      }
     }
   }
 
